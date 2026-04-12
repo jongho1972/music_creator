@@ -8,7 +8,16 @@ const state = {
   mixStyle: null,
   volume: 0.8,
   playing: false,
-  seed: 0
+  seed: 0,
+  djFx: {
+    lpf: 20000,     // 필터 (low-pass, 20000 = full open)
+    reverb: 0,      // 리버브 wet
+    delay: 0,       // 딜레이 wet
+    shape: 0,       // 디스토션
+    tempoMul: 1.0,  // 템포 배수
+    drumMute: false,
+    melMute: false
+  }
 };
 
 // ─── 변주 생성 ───────────────────────────────
@@ -41,7 +50,9 @@ function applyVariation(layers, seed) {
 }
 
 // ─── 코드 렌더링 ──────────────────────────────
-function renderCode(styleKey, mixStyleKey, volume, seed) {
+const DRUM_RE = /sound\("(bd|sd|hh|cp|cr|rim|cb|oh)/;
+
+function renderCode(styleKey, mixStyleKey, volume, seed, djFx) {
   const t = window.TEMPLATES[styleKey];
   if (!t) return '';
 
@@ -54,16 +65,29 @@ function renderCode(styleKey, mixStyleKey, volume, seed) {
     const t2 = window.TEMPLATES[mixStyleKey];
     bpm = Math.round((t.bpm + t2.bpm) / 2);
     name = `${t.name} + ${t2.name}`;
-    // 드럼은 A에서, 멜로디는 B에서 가져와 섞기
-    const aDrums = t.layers.filter(l => /sound\("(bd|sd|hh|cp|cr)/.test(l));
-    const bMelodic = t2.layers.filter(l => !/sound\("(bd|sd|hh|cp|cr|rim|cb|oh)/.test(l));
+    const aDrums = t.layers.filter(l => DRUM_RE.test(l));
+    const bMelodic = t2.layers.filter(l => !DRUM_RE.test(l));
     layers = [...aDrums, ...bMelodic];
   }
 
   layers = applyVariation(layers, seed);
 
+  // DJ 뮤트 적용
+  if (djFx.drumMute) layers = layers.filter(l => !DRUM_RE.test(l));
+  if (djFx.melMute) layers = layers.filter(l => DRUM_RE.test(l));
+  if (layers.length === 0) layers = ['silence']; // 방어
+
   const body = layers.map(l => '  ' + l).join(',\n');
-  const code = `// ${name} · ${bpm} BPM\ncps(${(bpm / 60 / 4).toFixed(4)})\n\nstack(\n${body}\n).gain(${volume.toFixed(2)})`;
+
+  // FX 체인 조립
+  let fx = `.gain(${volume.toFixed(2)})`;
+  if (Math.abs(djFx.tempoMul - 1) > 0.001) fx += `.fast(${djFx.tempoMul.toFixed(2)})`;
+  if (djFx.lpf < 19999) fx += `.lpf(${Math.round(djFx.lpf)})`;
+  if (djFx.reverb > 0) fx += `.room(${djFx.reverb.toFixed(2)})`;
+  if (djFx.delay > 0) fx += `.delay(${djFx.delay.toFixed(2)}).delaytime(0.375).delayfeedback(0.5)`;
+  if (djFx.shape > 0) fx += `.shape(${djFx.shape.toFixed(2)})`;
+
+  const code = `// ${name} · ${bpm} BPM\ncps(${(bpm / 60 / 4).toFixed(4)})\n\nstack(\n${body}\n)${fx}`;
   return { code, bpm, name };
 }
 
@@ -103,7 +127,7 @@ function generate(style, { newSeed = true } = {}) {
   state.currentStyle = style;
   if (newSeed) state.seed = Math.floor(Math.random() * 1000000);
 
-  const result = renderCode(style, state.mixStyle, state.volume, state.seed);
+  const result = renderCode(style, state.mixStyle, state.volume, state.seed, state.djFx);
   if (!result) return;
 
   document.getElementById('codeEditor').value = result.code;
@@ -173,6 +197,52 @@ function populateMixSelect() {
     sel.appendChild(opt);
   }
 }
+
+// ─── DJ 컨트롤 바인딩 ─────────────────────────
+function bindDjSlider(id, key, formatter) {
+  const el = document.getElementById(id);
+  const label = document.getElementById(id + 'Val');
+  el.addEventListener('input', () => {
+    state.djFx[key] = parseFloat(el.value);
+    if (label) label.textContent = formatter(state.djFx[key]);
+    generate(state.currentStyle, { newSeed: false });
+  });
+}
+
+bindDjSlider('lpfSlider', 'lpf', v => v >= 19999 ? 'OFF' : Math.round(v) + 'Hz');
+bindDjSlider('reverbSlider', 'reverb', v => Math.round(v * 100) + '%');
+bindDjSlider('delaySlider', 'delay', v => Math.round(v * 100) + '%');
+bindDjSlider('shapeSlider', 'shape', v => Math.round(v * 100) + '%');
+bindDjSlider('tempoSlider', 'tempoMul', v => v.toFixed(2) + 'x');
+
+document.getElementById('drumMuteBtn').addEventListener('click', () => {
+  state.djFx.drumMute = !state.djFx.drumMute;
+  document.getElementById('drumMuteBtn').classList.toggle('muted', state.djFx.drumMute);
+  generate(state.currentStyle, { newSeed: false });
+});
+
+document.getElementById('melMuteBtn').addEventListener('click', () => {
+  state.djFx.melMute = !state.djFx.melMute;
+  document.getElementById('melMuteBtn').classList.toggle('muted', state.djFx.melMute);
+  generate(state.currentStyle, { newSeed: false });
+});
+
+document.getElementById('fxResetBtn').addEventListener('click', () => {
+  state.djFx = { lpf: 20000, reverb: 0, delay: 0, shape: 0, tempoMul: 1.0, drumMute: false, melMute: false };
+  document.getElementById('lpfSlider').value = 20000;
+  document.getElementById('reverbSlider').value = 0;
+  document.getElementById('delaySlider').value = 0;
+  document.getElementById('shapeSlider').value = 0;
+  document.getElementById('tempoSlider').value = 1;
+  document.getElementById('lpfSliderVal').textContent = 'OFF';
+  document.getElementById('reverbSliderVal').textContent = '0%';
+  document.getElementById('delaySliderVal').textContent = '0%';
+  document.getElementById('shapeSliderVal').textContent = '0%';
+  document.getElementById('tempoSliderVal').textContent = '1.00x';
+  document.getElementById('drumMuteBtn').classList.remove('muted');
+  document.getElementById('melMuteBtn').classList.remove('muted');
+  generate(state.currentStyle, { newSeed: false });
+});
 
 populateMixSelect();
 setPlayingState(false);

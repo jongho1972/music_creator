@@ -56,6 +56,42 @@
     </div>
   </section>
 
+  <section class="dj-console">
+    <div class="dj-header">🎛️ DJ 컨트롤 <span class="dj-hint">재생 중에 조작하면 라이브로 반영됩니다</span></div>
+    <div class="dj-sliders">
+      <label class="dj-slider">
+        <span class="dj-label">🎚️ 필터</span>
+        <input type="range" id="lpfSlider" min="200" max="20000" step="100" value="20000">
+        <span class="dj-val" id="lpfSliderVal">OFF</span>
+      </label>
+      <label class="dj-slider">
+        <span class="dj-label">💫 리버브</span>
+        <input type="range" id="reverbSlider" min="0" max="1" step="0.05" value="0">
+        <span class="dj-val" id="reverbSliderVal">0%</span>
+      </label>
+      <label class="dj-slider">
+        <span class="dj-label">🔁 딜레이</span>
+        <input type="range" id="delaySlider" min="0" max="0.7" step="0.05" value="0">
+        <span class="dj-val" id="delaySliderVal">0%</span>
+      </label>
+      <label class="dj-slider">
+        <span class="dj-label">🔥 크러시</span>
+        <input type="range" id="shapeSlider" min="0" max="0.7" step="0.05" value="0">
+        <span class="dj-val" id="shapeSliderVal">0%</span>
+      </label>
+      <label class="dj-slider">
+        <span class="dj-label">🚀 템포</span>
+        <input type="range" id="tempoSlider" min="0.5" max="2" step="0.05" value="1">
+        <span class="dj-val" id="tempoSliderVal">1.00x</span>
+      </label>
+    </div>
+    <div class="dj-toggles">
+      <button id="drumMuteBtn" class="dj-toggle">🥁 드럼 뮤트</button>
+      <button id="melMuteBtn" class="dj-toggle">🎹 멜로디 뮤트</button>
+      <button id="fxResetBtn" class="dj-reset">🔄 리셋</button>
+    </div>
+  </section>
+
   <section class="now-playing">
     <div class="np-label">현재 스타일</div>
     <div class="np-name" id="nowPlayingName">-</div>

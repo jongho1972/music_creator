@@ -203,6 +203,101 @@ main {
 }
 .status.ready { color: #7fe3a0; }
 
+.dj-console {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px 22px;
+  margin-bottom: 20px;
+}
+
+.dj-header {
+  font-size: 0.95rem;
+  color: var(--text);
+  font-weight: 600;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.dj-hint {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.dj-sliders {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px 18px;
+  margin-bottom: 14px;
+}
+
+.dj-slider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--panel-hi);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 12px;
+}
+
+.dj-label {
+  color: var(--muted);
+  font-size: 0.82rem;
+  min-width: 55px;
+  white-space: nowrap;
+}
+
+.dj-slider input[type="range"] {
+  flex: 1;
+  accent-color: var(--accent);
+  min-width: 0;
+}
+
+.dj-val {
+  min-width: 56px;
+  text-align: right;
+  color: var(--accent2);
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.dj-toggles {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.dj-toggle, .dj-reset {
+  background: var(--panel-hi);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 9px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+
+.dj-toggle:hover, .dj-reset:hover {
+  border-color: var(--accent);
+}
+
+.dj-toggle.muted {
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 0 15px rgba(255, 107, 157, 0.4);
+}
+
+.dj-reset {
+  margin-left: auto;
+}
+
 .now-playing {
   background: var(--panel);
   border: 1px solid var(--border);
@@ -361,6 +456,24 @@ footer a {
     text-align: center;
     margin-left: 0;
     padding-top: 4px;
+  }
+
+  /* DJ 콘솔 */
+  .dj-console { padding: 14px; }
+  .dj-sliders {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .dj-slider { padding: 7px 10px; }
+  .dj-label { font-size: 0.78rem; min-width: 50px; }
+  .dj-val { font-size: 0.74rem; min-width: 48px; }
+  .dj-toggles {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .dj-reset {
+    grid-column: 1 / -1;
+    margin-left: 0;
   }
 
   /* 현재 재생 카드 */
