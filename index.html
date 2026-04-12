@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EDM Creator</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%B5%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+  <h1>🎵 EDM Creator</h1>
+  <p class="subtitle">원하는 스타일을 선택하거나 입력하면 Strudel 라이브 코딩 패턴을 생성합니다 · <kbd>Space</kbd> 재생/정지</p>
+</header>
+
+<main>
+  <section class="controls">
+    <div class="preset-buttons">
+      <button class="preset" data-style="ibiza">🏝️ 이비자</button>
+      <button class="preset" data-style="techno">🏭 테크노</button>
+      <button class="preset" data-style="dnb">⚡ DnB</button>
+      <button class="preset" data-style="lofi">☕ 로파이</button>
+      <button class="preset" data-style="trap">🔥 트랩</button>
+      <button class="preset" data-style="trance">🌌 트랜스</button>
+      <button class="preset" data-style="ambient">🌊 앰비언트</button>
+      <button class="preset" data-style="synthwave">🌃 신스웨이브80s</button>
+      <button class="preset" data-style="deephouse">🎹 딥하우스</button>
+      <button class="preset" data-style="disco">🎛️ 디스코펑크</button>
+      <button class="preset" data-style="funksoul">🎷 펑크소울</button>
+      <button class="preset" data-style="reggae">🎸 레게</button>
+      <button class="preset" data-style="jazz">🎺 재즈</button>
+      <button class="preset" data-style="hardstyle">🏛️ 하드스타일</button>
+      <button class="preset" data-style="psytrance">🌀 사이키트랜스</button>
+      <button class="preset" data-style="breakbeat">🥁 브레이크비트</button>
+      <button class="preset" data-style="neoclassic">🎻 네오클래식</button>
+      <button class="preset" data-style="glitch">🤖 글리치/IDM</button>
+      <button class="preset" data-style="kpop">🎶 K-pop</button>
+    </div>
+
+    <div class="custom-input">
+      <input type="text" id="customStyle" placeholder="또는 직접 입력: 예) 빠른 디스코, 몽환적인 신스웨이브, 어두운 테크노...">
+      <button id="generateBtn">생성</button>
+    </div>
+
+    <div class="mix-row">
+      <label>🔀 믹스:</label>
+      <select id="mixSelect"></select>
+      <label class="autoplay-label">
+        <input type="checkbox" id="autoplayToggle" checked> 생성 시 자동 재생
+      </label>
+    </div>
+
+    <div class="actions">
+      <button id="playBtn" class="play-btn">▶ 재생</button>
+      <button id="stopBtn" class="stop-btn">⏹ 정지</button>
+      <button id="regenBtn" class="regen-btn">🎲 변주</button>
+      <button id="copyBtn" class="copy-btn">📋 코드 복사</button>
+      <div class="volume-wrap">
+        <span>🔊</span>
+        <input type="range" id="volumeSlider" min="0" max="1.2" step="0.05" value="0.8">
+        <span id="volumeValue">80%</span>
+      </div>
+      <span id="status" class="status">로딩 중...</span>
+    </div>
+  </section>
+
+  <section class="now-playing">
+    <div class="np-label">현재 스타일</div>
+    <div class="np-name" id="nowPlayingName">-</div>
+    <div class="np-bpm" id="nowPlayingBpm">- BPM</div>
+  </section>
+
+  <section class="output">
+    <div class="code-panel">
+      <h2>생성된 코드 <span class="edit-hint">(편집 후 ▶ 재생으로 실행)</span></h2>
+      <textarea id="codeEditor" spellcheck="false"></textarea>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>Powered by <a href="https://strudel.cc/" target="_blank">Strudel</a> — 라이브 코딩 음악 플랫폼</p>
+  <p>개발: 이종호 (<a href="mailto:jongho1972@gmail.com">jongho1972@gmail.com</a>)</p>
+  <p id="deploy-time">최종 배포: 2026년 04월 12일</p>
+</footer>
+
+<script src="templates.js"></script>
+<script type="module">
+  const statusEl = document.getElementById('status');
+  statusEl.textContent = '⏳ Strudel 초기화 중...';
+  try {
+    const { initStrudel } = await import('https://esm.sh/@strudel/web@1.0.3');
+    statusEl.textContent = '⏳ 샘플 로딩 중...';
+    await initStrudel({
+      prebake: () => samples('github:tidalcycles/dirt-samples')
+    });
+    window.__strudelReady = true;
+    statusEl.textContent = '✓ 준비 완료';
+    statusEl.classList.add('ready');
+  } catch (err) {
+    console.error('Strudel init error:', err);
+    statusEl.textContent = '✗ 로드 실패';
+  }
+</script>
+<script src="app.js"></script>
+</body>
+</html>

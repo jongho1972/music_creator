@@ -1,0 +1,338 @@
+:root {
+  --bg: #0f0f1a;
+  --panel: #1a1a2e;
+  --panel-hi: #25253d;
+  --accent: #ff6b9d;
+  --accent2: #6bb8ff;
+  --text: #e8e8f0;
+  --muted: #8888a0;
+  --border: #2d2d48;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, 'SF Pro', 'Noto Sans KR', sans-serif;
+  background: linear-gradient(135deg, var(--bg) 0%, #1a0f2e 100%);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 24px;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+h1 {
+  font-size: 2.4rem;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+kbd {
+  background: var(--panel-hi);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 0.82rem;
+  font-family: 'D2Coding', monospace;
+  color: var(--text);
+}
+
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.controls {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.preset-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.preset {
+  background: var(--panel-hi);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 8px 14px;
+  border-radius: 22px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.preset:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.preset.selected {
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  border-color: transparent;
+  color: white;
+}
+
+.custom-input {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.custom-input input {
+  flex: 1;
+  background: var(--panel-hi);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 11px 16px;
+  border-radius: 12px;
+  font-size: 0.92rem;
+}
+
+.custom-input input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.custom-input button,
+.actions button {
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  color: white;
+  border: none;
+  padding: 11px 22px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.92rem;
+  transition: transform 0.2s;
+}
+
+.custom-input button:hover,
+.actions button:hover {
+  transform: translateY(-2px);
+}
+
+.mix-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.mix-row select {
+  background: var(--panel-hi);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+.autoplay-label {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.autoplay-label input {
+  accent-color: var(--accent);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.copy-btn {
+  background: var(--panel-hi) !important;
+  border: 1px solid var(--border) !important;
+}
+
+.regen-btn {
+  background: linear-gradient(90deg, var(--accent), var(--accent2)) !important;
+  border: none !important;
+  color: white !important;
+  box-shadow: 0 0 15px rgba(255, 107, 157, 0.3);
+}
+
+.regen-btn:hover {
+  box-shadow: 0 0 25px rgba(255, 107, 157, 0.5);
+}
+
+.play-btn, .stop-btn {
+  background: var(--panel-hi) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--muted) !important;
+  transition: all 0.2s;
+}
+
+.play-btn.active, .stop-btn.active {
+  background: linear-gradient(90deg, var(--accent), var(--accent2)) !important;
+  border-color: transparent !important;
+  color: white !important;
+  box-shadow: 0 0 20px rgba(255, 107, 157, 0.4);
+}
+
+.play-btn:disabled, .stop-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.volume-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--panel-hi);
+  border: 1px solid var(--border);
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.volume-wrap input[type="range"] {
+  width: 100px;
+  accent-color: var(--accent);
+}
+
+#volumeValue {
+  min-width: 36px;
+  text-align: right;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.status {
+  margin-left: auto;
+  align-self: center;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.status.ready { color: #7fe3a0; }
+
+.now-playing {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.np-label {
+  color: var(--muted);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.np-name {
+  font-size: 1.6rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.np-bpm {
+  font-size: 1rem;
+  color: var(--accent2);
+  font-variant-numeric: tabular-nums;
+  margin-left: auto;
+}
+
+.output {
+  display: block;
+}
+
+.code-panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.code-panel h2 {
+  font-size: 1rem;
+  color: var(--muted);
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.edit-hint {
+  font-size: 0.78rem;
+  color: var(--muted);
+  font-weight: 400;
+  margin-left: 6px;
+}
+
+#codeEditor {
+  width: 100%;
+  height: 360px;
+  background: #0a0a14;
+  color: #b8e0ff;
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  font-family: 'D2Coding', 'SF Mono', Menlo, monospace;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+#codeEditor:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+footer {
+  text-align: center;
+  margin-top: 40px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+footer p {
+  margin: 4px 0;
+}
+
+footer a {
+  color: var(--accent2);
+  text-decoration: none;
+}
