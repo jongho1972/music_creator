@@ -269,24 +269,3 @@ window.TEMPLATES = {
   }
 };
 
-window.KEYWORDS = {
-  synthwave: ['신스웨이브', 'synthwave', '80s', '레트로', '네온', '아웃런'],
-  deephouse: ['딥하우스', 'deep house', 'deephouse', '시카고', '따뜻한'],
-  disco: ['디스코', 'disco', '펑키', 'funky', '슬랩'],
-  funksoul: ['펑크소울', 'funk', 'soul', '소울', '그루브', 'groove', '와우'],
-  reggae: ['레게', 'reggae', '덥', 'dub', '자메이카', '스카'],
-  jazz: ['재즈', 'jazz', '스윙', 'swing', '워킹베이스', '빅밴드'],
-  hardstyle: ['하드스타일', 'hardstyle', '하드코어', 'hardcore', '강한', '과격'],
-  psytrance: ['사이키', 'psytrance', 'psy', '사이키델릭', '풀온'],
-  breakbeat: ['브레이크비트', 'breakbeat', '브레이크', '아멘', 'amen', 'jungle', '정글'],
-  neoclassic: ['네오클래식', '클래식', 'classical', '현악', '시네마틱', 'cinematic'],
-  glitch: ['글리치', 'glitch', 'idm', '불규칙', '실험', 'experimental'],
-  kpop: ['k-pop', 'kpop', '케이팝', '아이돌', '드롭'],
-  ibiza: ['이비자', '하우스', 'house', 'ibiza', '댄스', '클럽'],
-  techno: ['테크노', 'techno', '인더스트리얼', '애시드', 'acid', '다크', '어두운'],
-  dnb: ['드럼앤베이스', 'dnb', 'drum', 'bass', '빠른'],
-  lofi: ['로파이', 'lofi', 'lo-fi', '칠', 'chill', '공부', '카페'],
-  trap: ['트랩', 'trap', '힙합', 'hiphop', '808', '하프타임', '갱스터'],
-  trance: ['트랜스', 'trance', '에픽', 'epic', '아르페지오', '페스티벌'],
-  ambient: ['앰비언트', 'ambient', '명상', '잔잔', '배경', 'background', '느린', '우주', '몽환']
-};

@@ -92,28 +92,6 @@ main {
   color: white;
 }
 
-.custom-input {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 14px;
-}
-
-.custom-input input {
-  flex: 1;
-  background: var(--panel-hi);
-  color: var(--text);
-  border: 1px solid var(--border);
-  padding: 11px 16px;
-  border-radius: 12px;
-  font-size: 0.92rem;
-}
-
-.custom-input input:focus {
-  outline: none;
-  border-color: var(--accent);
-}
-
-.custom-input button,
 .actions button {
   background: linear-gradient(90deg, var(--accent), var(--accent2));
   color: white;
@@ -126,7 +104,6 @@ main {
   transition: transform 0.2s;
 }
 
-.custom-input button:hover,
 .actions button:hover {
   transform: translateY(-2px);
 }
@@ -147,22 +124,6 @@ main {
   padding: 8px 12px;
   border-radius: 10px;
   font-size: 0.88rem;
-  cursor: pointer;
-}
-
-.autoplay-label {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  color: var(--text);
-}
-
-.autoplay-label input {
-  accent-color: var(--accent);
-  width: 16px;
-  height: 16px;
   cursor: pointer;
 }
 
@@ -362,21 +323,6 @@ footer a {
     text-align: center;
   }
 
-  /* 생성 입력: 세로 스택 */
-  .custom-input {
-    flex-direction: column;
-    gap: 8px;
-  }
-  .custom-input input {
-    width: 100%;
-    padding: 11px 14px;
-    font-size: 0.88rem;
-  }
-  .custom-input button {
-    width: 100%;
-    padding: 12px;
-  }
-
   /* 믹스 행: 세로 스택 */
   .mix-row {
     flex-direction: column;
@@ -388,12 +334,6 @@ footer a {
   }
   .mix-row select {
     width: 100%;
-  }
-  .autoplay-label {
-    margin-left: 0;
-    justify-content: flex-start;
-    white-space: nowrap;
-    font-size: 0.88rem;
   }
 
   /* 액션 버튼: 그리드 */

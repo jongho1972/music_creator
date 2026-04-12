@@ -7,20 +7,9 @@ const state = {
   currentStyle: 'ibiza',
   mixStyle: null,
   volume: 0.8,
-  autoplay: true,
   playing: false,
   seed: 0
 };
-
-// ─── 키워드 매칭 ─────────────────────────────
-function matchStyle(input) {
-  const lower = input.toLowerCase().trim();
-  if (!lower) return 'ibiza';
-  for (const [style, words] of Object.entries(window.KEYWORDS)) {
-    if (words.some(w => lower.includes(w.toLowerCase()))) return style;
-  }
-  return 'ibiza';
-}
 
 // ─── 변주 생성 ───────────────────────────────
 // 시드에 따라 레이어 순서/선택을 섞어 재클릭 시마다 다른 패턴 생성
@@ -110,7 +99,7 @@ function stopCurrent() {
 }
 
 // ─── 생성 ─────────────────────────────────────
-function generate(style, { newSeed = true, silent = false, allowAutoplay = true } = {}) {
+function generate(style, { newSeed = true } = {}) {
   state.currentStyle = style;
   if (newSeed) state.seed = Math.floor(Math.random() * 1000000);
 
@@ -125,28 +114,15 @@ function generate(style, { newSeed = true, silent = false, allowAutoplay = true 
     btn.classList.toggle('selected', btn.dataset.style === style);
   });
 
-  if (silent) return;
-
-  // 재생 중이면 새 코드로 즉시 재평가 (자연스러운 라이브 코딩 느낌)
+  // 재생 중이면 새 코드로 즉시 재평가 (라이브 코딩 느낌)
   if (state.playing) {
     try { window.evaluate(result.code); } catch (e) { console.error(e); }
-  } else if (allowAutoplay && state.autoplay && window.__strudelReady) {
-    playCurrent();
   }
 }
 
 // ─── 이벤트 바인딩 ────────────────────────────
 document.querySelectorAll('.preset').forEach(btn => {
-  btn.addEventListener('click', () => generate(btn.dataset.style, { allowAutoplay: false }));
-});
-
-document.getElementById('generateBtn').addEventListener('click', () => {
-  const input = document.getElementById('customStyle').value;
-  generate(matchStyle(input));
-});
-
-document.getElementById('customStyle').addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') document.getElementById('generateBtn').click();
+  btn.addEventListener('click', () => generate(btn.dataset.style));
 });
 
 document.getElementById('playBtn').addEventListener('click', playCurrent);
@@ -171,10 +147,6 @@ document.getElementById('volumeSlider').addEventListener('input', (e) => {
   document.getElementById('volumeValue').textContent = Math.round(state.volume * 100) + '%';
   // 재생 중이면 볼륨 변경만 반영해 재평가
   generate(state.currentStyle, { newSeed: false });
-});
-
-document.getElementById('autoplayToggle').addEventListener('change', (e) => {
-  state.autoplay = e.target.checked;
 });
 
 document.getElementById('mixSelect').addEventListener('change', (e) => {
@@ -204,4 +176,4 @@ function populateMixSelect() {
 
 populateMixSelect();
 setPlayingState(false);
-generate('ibiza', { silent: true });
+generate('ibiza');
