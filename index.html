@@ -10,7 +10,7 @@
 <body>
 <header>
   <h1>🎵 EDM Creator</h1>
-  <p class="subtitle">Strudel 라이브 코딩 EDM 패턴 생성기<span class="kbd-hint"> · <kbd>Space</kbd> 재생/정지</span></p>
+  <p class="subtitle">Strudel 라이브 코딩 EDM 패턴 생성기</p>
 </header>
 
 <main>
@@ -37,27 +37,21 @@
       <button class="preset" data-style="kpop">🎶 K-pop</button>
     </div>
 
-    <div class="mix-row">
-      <label>🔀 믹스:</label>
-      <select id="mixSelect"></select>
-    </div>
-
     <div class="actions">
       <button id="playBtn" class="play-btn">▶ 재생</button>
       <button id="stopBtn" class="stop-btn">⏹ 정지</button>
-      <button id="regenBtn" class="regen-btn">🎲 변주</button>
       <button id="copyBtn" class="copy-btn">📋 코드 복사</button>
-      <div class="volume-wrap">
-        <span>🔊</span>
-        <input type="range" id="volumeSlider" min="0" max="1.2" step="0.05" value="0.8">
-        <span id="volumeValue">80%</span>
-      </div>
       <span id="status" class="status">로딩 중...</span>
     </div>
   </section>
 
   <section class="dj-console">
     <div class="dj-header">🎛️ DJ 컨트롤 <span class="dj-hint">재생 중에 조작하면 라이브로 반영됩니다</span></div>
+    <div class="dj-mix-row">
+      <label class="dj-mix-label">🔀 믹스</label>
+      <select id="mixSelect" class="dj-mix-select"></select>
+      <button id="regenBtn" class="dj-regen-btn">🎲 변주</button>
+    </div>
     <div class="dj-sliders">
       <label class="dj-slider">
         <span class="dj-label">🎚️ 필터</span>
@@ -83,6 +77,11 @@
         <span class="dj-label">🚀 템포</span>
         <input type="range" id="tempoSlider" min="0.5" max="2" step="0.05" value="1">
         <span class="dj-val" id="tempoSliderVal">1.00x</span>
+      </label>
+      <label class="dj-slider">
+        <span class="dj-label">🔊 볼륨</span>
+        <input type="range" id="volumeSlider" min="0" max="1.2" step="0.05" value="0.8">
+        <span class="dj-val" id="volumeValue">80%</span>
       </label>
     </div>
     <div class="dj-toggles">

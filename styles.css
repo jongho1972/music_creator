@@ -108,23 +108,53 @@ main {
   transform: translateY(-2px);
 }
 
-.mix-row {
+.dj-mix-row {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 14px;
-  font-size: 0.9rem;
-  color: var(--muted);
+  margin-bottom: 12px;
+  background: var(--panel-hi);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 12px;
 }
 
-.mix-row select {
-  background: var(--panel-hi);
+.dj-mix-label {
+  color: var(--muted);
+  font-size: 0.82rem;
+  min-width: 55px;
+  white-space: nowrap;
+}
+
+.dj-mix-select {
+  flex: 1;
+  background: var(--bg);
   color: var(--text);
   border: 1px solid var(--border);
-  padding: 8px 12px;
-  border-radius: 10px;
-  font-size: 0.88rem;
+  padding: 7px 10px;
+  border-radius: 8px;
+  font-size: 0.85rem;
   cursor: pointer;
+  min-width: 0;
+}
+
+.dj-regen-btn {
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  box-shadow: 0 0 15px rgba(255, 107, 157, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.dj-regen-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 25px rgba(255, 107, 157, 0.5);
 }
 
 .actions {
@@ -137,17 +167,6 @@ main {
 .copy-btn {
   background: var(--panel-hi) !important;
   border: 1px solid var(--border) !important;
-}
-
-.regen-btn {
-  background: linear-gradient(90deg, var(--accent), var(--accent2)) !important;
-  border: none !important;
-  color: white !important;
-  box-shadow: 0 0 15px rgba(255, 107, 157, 0.3);
-}
-
-.regen-btn:hover {
-  box-shadow: 0 0 25px rgba(255, 107, 157, 0.5);
 }
 
 .play-btn, .stop-btn {
@@ -169,30 +188,6 @@ main {
   cursor: not-allowed;
   transform: none !important;
   box-shadow: none !important;
-}
-
-.volume-wrap {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--panel-hi);
-  border: 1px solid var(--border);
-  padding: 8px 12px;
-  border-radius: 12px;
-  font-size: 0.85rem;
-  color: var(--muted);
-}
-
-.volume-wrap input[type="range"] {
-  width: 100px;
-  accent-color: var(--accent);
-}
-
-#volumeValue {
-  min-width: 36px;
-  text-align: right;
-  color: var(--text);
-  font-variant-numeric: tabular-nums;
 }
 
 .status {
@@ -418,19 +413,6 @@ footer a {
     text-align: center;
   }
 
-  /* 믹스 행: 세로 스택 */
-  .mix-row {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
-  }
-  .mix-row > label:first-child {
-    font-size: 0.82rem;
-  }
-  .mix-row select {
-    width: 100%;
-  }
-
   /* 액션 버튼: 그리드 */
   .actions {
     display: grid;
@@ -442,15 +424,6 @@ footer a {
     font-size: 0.85rem;
     width: 100%;
   }
-  .volume-wrap {
-    grid-column: 1 / -1;
-    justify-content: center;
-    padding: 8px 10px;
-  }
-  .volume-wrap input[type="range"] {
-    flex: 1;
-    max-width: 180px;
-  }
   .status {
     grid-column: 1 / -1;
     text-align: center;
@@ -460,6 +433,14 @@ footer a {
 
   /* DJ 콘솔 */
   .dj-console { padding: 14px; }
+  .dj-mix-row {
+    flex-wrap: wrap;
+    padding: 8px 10px;
+    gap: 8px;
+  }
+  .dj-mix-label { font-size: 0.78rem; min-width: 50px; }
+  .dj-mix-select { flex: 1 1 100%; order: 3; font-size: 0.82rem; }
+  .dj-regen-btn { padding: 7px 12px; font-size: 0.82rem; }
   .dj-sliders {
     grid-template-columns: 1fr;
     gap: 8px;
