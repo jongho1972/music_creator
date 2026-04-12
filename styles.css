@@ -336,3 +336,115 @@ footer a {
   color: var(--accent2);
   text-decoration: none;
 }
+
+/* ───────── 모바일 (≤640px) ───────── */
+@media (max-width: 640px) {
+  body { padding: 12px; }
+  header { margin-bottom: 18px; }
+  h1 { font-size: 1.8rem; }
+  .subtitle { font-size: 0.82rem; }
+  .kbd-hint { display: none; }
+
+  main { max-width: 100%; }
+
+  .controls { padding: 14px; margin-bottom: 14px; border-radius: 14px; }
+
+  .preset-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .preset {
+    padding: 9px 6px;
+    font-size: 0.78rem;
+    border-radius: 14px;
+    text-align: center;
+  }
+
+  /* 생성 입력: 세로 스택 */
+  .custom-input {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .custom-input input {
+    width: 100%;
+    padding: 11px 14px;
+    font-size: 0.88rem;
+  }
+  .custom-input button {
+    width: 100%;
+    padding: 12px;
+  }
+
+  /* 믹스 행: 세로 스택 */
+  .mix-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .mix-row > label:first-child {
+    font-size: 0.82rem;
+  }
+  .mix-row select {
+    width: 100%;
+  }
+  .autoplay-label {
+    margin-left: 0;
+    justify-content: flex-start;
+    white-space: nowrap;
+    font-size: 0.88rem;
+  }
+
+  /* 액션 버튼: 그리드 */
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .actions button {
+    padding: 11px 8px;
+    font-size: 0.85rem;
+    width: 100%;
+  }
+  .volume-wrap {
+    grid-column: 1 / -1;
+    justify-content: center;
+    padding: 8px 10px;
+  }
+  .volume-wrap input[type="range"] {
+    flex: 1;
+    max-width: 180px;
+  }
+  .status {
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-left: 0;
+    padding-top: 4px;
+  }
+
+  /* 현재 재생 카드 */
+  .now-playing {
+    padding: 14px 16px;
+    gap: 8px;
+  }
+  .np-name { font-size: 1.2rem; }
+  .np-bpm { font-size: 0.88rem; margin-left: 0; }
+
+  /* 코드 에디터 */
+  .code-panel { padding: 14px; }
+  #codeEditor {
+    height: 260px;
+    font-size: 0.72rem;
+    padding: 12px;
+  }
+  .edit-hint { display: block; margin-left: 0; margin-top: 2px; font-size: 0.72rem; }
+
+  footer { font-size: 0.76rem; margin-top: 24px; }
+}
+
+/* 아주 작은 화면 (≤380px): 프리셋 2열 */
+@media (max-width: 380px) {
+  .preset-buttons { grid-template-columns: repeat(2, 1fr); }
+  h1 { font-size: 1.6rem; }
+}
