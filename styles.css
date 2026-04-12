@@ -164,9 +164,34 @@ main {
   flex-wrap: wrap;
 }
 
+.code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.code-header h2 {
+  margin-bottom: 0;
+}
+
 .copy-btn {
-  background: var(--panel-hi) !important;
-  border: 1px solid var(--border) !important;
+  background: var(--panel-hi);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.copy-btn:hover {
+  border-color: var(--accent);
+  transform: translateY(-1px);
 }
 
 .play-btn, .stop-btn {
@@ -467,6 +492,8 @@ footer a {
 
   /* 코드 에디터 */
   .code-panel { padding: 14px; }
+  .code-header { flex-wrap: wrap; gap: 8px; }
+  .copy-btn { padding: 7px 12px; font-size: 0.78rem; }
   #codeEditor {
     height: 260px;
     font-size: 0.72rem;

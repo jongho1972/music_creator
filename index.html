@@ -40,7 +40,6 @@
     <div class="actions">
       <button id="playBtn" class="play-btn">▶ 재생</button>
       <button id="stopBtn" class="stop-btn">⏹ 정지</button>
-      <button id="copyBtn" class="copy-btn">📋 코드 복사</button>
       <span id="status" class="status">로딩 중...</span>
     </div>
   </section>
@@ -99,7 +98,10 @@
 
   <section class="output">
     <div class="code-panel">
-      <h2>생성된 코드 <span class="edit-hint">(편집 후 ▶ 재생으로 실행)</span></h2>
+      <div class="code-header">
+        <h2>생성된 코드 <span class="edit-hint">(편집 후 ▶ 재생으로 실행)</span></h2>
+        <button id="copyBtn" class="copy-btn">📋 코드 복사</button>
+      </div>
       <textarea id="codeEditor" spellcheck="false"></textarea>
     </div>
   </section>
