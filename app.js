@@ -141,6 +141,13 @@ function renderCode(styleKey, mixStyleKey, volume, seed, djFx) {
 }
 
 // ─── 재생/정지 ────────────────────────────────
+const DJ_CONTROL_IDS = [
+  'mixSelect', 'regenBtn',
+  'xfSlider', 'volumeSlider', 'lpfSlider', 'hpfSlider',
+  'reverbSlider', 'delaySlider', 'swingSlider', 'shapeSlider', 'tempoSlider',
+  'buildBtn', 'dropBtn', 'sidechainBtn', 'drumMuteBtn', 'melMuteBtn', 'fxResetBtn',
+];
+
 function setPlayingState(playing) {
   state.playing = playing;
   const playBtn = document.getElementById('playBtn');
@@ -149,6 +156,12 @@ function setPlayingState(playing) {
   stopBtn.classList.toggle('active', playing);
   playBtn.disabled = playing;
   stopBtn.disabled = !playing;
+  const djConsole = document.querySelector('.dj-console');
+  if (djConsole) djConsole.classList.toggle('disabled', !playing);
+  for (const id of DJ_CONTROL_IDS) {
+    const el = document.getElementById(id);
+    if (el) el.disabled = !playing;
+  }
 }
 
 function playCurrent() {

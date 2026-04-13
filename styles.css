@@ -276,6 +276,17 @@ main {
   border-radius: 16px;
   padding: 18px 22px;
   margin-bottom: 20px;
+  transition: opacity 0.2s;
+}
+
+.dj-console.disabled {
+  opacity: 0.45;
+}
+
+.dj-console.disabled button,
+.dj-console.disabled input,
+.dj-console.disabled select {
+  cursor: not-allowed;
 }
 
 .dj-header {
