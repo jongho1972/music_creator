@@ -281,6 +281,8 @@ document.getElementById('melMuteBtn').addEventListener('click', () => {
 });
 
 document.getElementById('fxResetBtn').addEventListener('click', () => {
+  state.mixStyle = null;
+  document.getElementById('mixSelect').value = '';
   state.djFx = { lpf: 20000, reverb: 0, delay: 0, shape: 0, tempoMul: 1.0, drumMute: false, melMute: false };
   document.getElementById('lpfSlider').value = 20000;
   document.getElementById('reverbSlider').value = 0;
