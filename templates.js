@@ -394,32 +394,6 @@ window.TEMPLATES = {
     ]
   },
 
-  minimaltechno: {
-    name: '◾ 미니멀 테크노',
-    bpm: 130,
-    description: '스파스 · 클릭 타악',
-    layers: [
-      `sound("bd*4").gain(1.25).shape(0.3)`,
-      `sound("~ ~ rim ~ ~ rim ~ ~").gain(0.55)`,
-      `sound("hh*8").gain("0.25 0.4".fast(2)).degradeBy(0.2)`,
-      `note("c2").sound("sine").struct("1 ~ ~ ~ 1 ~ ~ ~").gain(1.0).decay(0.25)`,
-      `note("<g2 ~ eb2 ~>").sound("square").struct("~ 1 ~ 1").lpf(1200).decay(0.15).gain(0.5).shape(0.3)`
-    ]
-  },
-
-  industrial: {
-    name: '⚙️ 인더스트리얼',
-    bpm: 135,
-    description: '디스토션 · 메탈릭 타악',
-    layers: [
-      `sound("bd*4").gain(1.5).shape(0.7).lpf(140)`,
-      `sound("~ cr ~ cr").gain(0.6).shape(0.5).room(0.4)`,
-      `sound("hh*16").gain(0.35).shape(0.3).degradeBy(0.25)`,
-      `note("<c1 c1 eb1 c1 g0 c1 f1 c1>").sound("sawtooth").lpf(sine.range(200,1000).slow(6)).lpq(15).gain(1.0).decay(0.1).sustain(0.2).shape(0.7)`,
-      `sound("noise*2").gain(0.25).hpf(2000).decay(0.2)`
-    ]
-  },
-
   uplifting: {
     name: '🌟 업리프팅 트랜스',
     bpm: 138,
@@ -567,28 +541,6 @@ window.TEMPLATES = {
     ]
   },
 
-  newage: {
-    name: '🔮 뉴에이지',
-    bpm: 70,
-    description: '명상 · 종과 플루트',
-    layers: [
-      `note("<c4 e4 g4 c5>*2").sound("sine").struct("1 ~ 1 ~ ~ 1 ~ ~").attack(0.1).release(1.5).gain(0.5).delay(0.5).delaytime(0.5).delayfeedback(0.5).room(0.9)`,
-      `note("<[c3,e3,g3] [a2,c3,e3] [f2,a2,c3] [g2,b2,d3]>").sound("triangle").attack(1).release(3).lpf(1800).room(0.95).gain(0.45)`,
-      `note("<c2 g2 f2 e2>").sound("sine").struct("1 ~ ~ ~").attack(0.5).release(2).gain(0.5)`
-    ]
-  },
-
-  drone: {
-    name: '🌀 드론',
-    bpm: 60,
-    description: '지속음 · 배음 조작',
-    layers: [
-      `note("c2").sound("sawtooth").attack(3).release(4).lpf(sine.range(400,1200).slow(30)).lpq(5).gain(0.6).room(0.95)`,
-      `note("c3").sound("triangle").attack(2).release(3).lpf(sine.range(600,1800).slow(20)).gain(0.4).room(0.9)`,
-      `note("g2").sound("sine").attack(4).release(5).gain(0.5).room(0.9).delay(0.6).delaytime(1.5).delayfeedback(0.5)`
-    ]
-  },
-
   // ──────────── Jazz / Soul / Funk 확장 ────────────
   smoothjazz: {
     name: '🎷 스무스 재즈',
@@ -693,19 +645,6 @@ window.TEMPLATES = {
       `sound("hh*8").gain(0.45)`,
       `note("<g2 d3 bb2 f3>").sound("sawtooth").struct("1 1 ~ 1 1 ~ 1 1").lpf(900).gain(0.9).decay(0.12).sustain(0.3)`,
       `note("<[g3,b3,d4] [c4,e4,g4] [d4,f#4,a4] [g3,b3,d4]>").sound("square").struct("~ 1 ~ 1").decay(0.2).sustain(0).lpf(2200).gain(0.4)`
-    ]
-  },
-
-  acidjazz: {
-    name: '🧪 애시드 재즈',
-    bpm: 100,
-    description: '펑키 + 애시드 베이스',
-    layers: [
-      `sound("bd ~ bd ~ ~ bd ~ ~").gain(1.15).shape(0.2)`,
-      `sound("~ ~ sd ~ ~ ~ sd ~").gain(0.85).room(0.2)`,
-      `sound("hh*16").gain("0.35 0.2".fast(2))`,
-      `note("<e2 e2 g2 e2 a2 g2 e2 d2>").sound("sawtooth").struct("1 1 1 1 1 1 1 1").lpf(sine.range(300,1500).slow(6)).lpq(15).gain(0.95).decay(0.1).sustain(0.3).shape(0.4)`,
-      `note("<[e3,g3,b3,d4] [a3,c4,e4,g4]>").sound("square").struct("~ 1 ~ 1").decay(0.2).sustain(0).lpf(2200).gain(0.4)`
     ]
   },
 
@@ -952,18 +891,6 @@ window.TEMPLATES = {
     ]
   },
 
-  minimalism: {
-    name: '🔄 미니멀리즘',
-    bpm: 120,
-    description: '반복 패턴 · Reich/Glass',
-    layers: [
-      `note("<c4 e4 g4 c5 g4 e4>*3").sound("triangle").decay(0.15).sustain(0.3).lpf(2200).gain(0.5).room(0.4)`,
-      `note("<e4 g4 c5 e5 c5 g4>*2").sound("sine").decay(0.2).sustain(0.4).gain(0.45).room(0.5).late(0.02)`,
-      `note("<c3 g3 c4>*2").sound("sawtooth").attack(0.3).release(1).lpf(1500).gain(0.35)`,
-      `note("<c2 g2>").sound("sine").attack(0.5).release(2).gain(0.4)`
-    ]
-  },
-
   cinematic: {
     name: '🎬 시네마틱',
     bpm: 80,
@@ -974,17 +901,6 @@ window.TEMPLATES = {
       `note("<d2 d2 a2 bb2>").sound("sawtooth").attack(0.3).release(1.5).lpf(800).gain(0.9).room(0.5)`,
       `note("<[d3,f3,a3] [bb2,d3,f3] [g2,bb2,d3] [a2,c3,e3]>").sound("sawtooth").attack(0.8).release(3).lpf(1800).room(0.9).gain(0.55)`,
       `note("<d5 f5 a5 d6>*2").sound("triangle").attack(0.3).release(2).lpf(3000).room(0.9).delay(0.5).delaytime(0.5).gain(0.4)`
-    ]
-  },
-
-  pianosolo: {
-    name: '🎹 피아노 솔로',
-    bpm: 72,
-    description: '서정적 · 독주',
-    layers: [
-      `note("<[c4,e4,g4] ~ [f3,a3,c4] ~ [g3,b3,d4] ~ [c3,e3,g3] ~>").sound("triangle").attack(0.02).decay(0.5).sustain(0.4).release(0.5).lpf(2500).gain(0.55).room(0.6)`,
-      `note("<e5 g5 c5 e5 d5 f5 b4 d5 c5 e5 a4 c5 g4 b4 e4 g4>").sound("sine").decay(0.3).sustain(0.3).release(0.5).gain(0.5).room(0.5)`,
-      `note("<c2 f2 g2 c3>").sound("triangle").attack(0.05).decay(0.6).sustain(0.5).gain(0.45).room(0.6)`
     ]
   },
 
@@ -1113,29 +1029,6 @@ window.TEMPLATES = {
       `note(choose("c3","e3","g3","a3","b3")).sound("triangle").struct("1 ~ 1 1 ~ 1 ~ 1").decay(0.2).sustain(0.4).lpf(rand.range(800,2500)).gain(0.5).room(0.5)`,
       `note(choose("c2","g2","a2","f2")).sound("sine").struct("1 ~ ~ 1 ~ 1 ~ ~").gain(0.85).decay(0.35)`,
       `note(choose("c5","e5","g5","a5","b5","d6")).sound("square").struct("~ 1 ~ 1 1 ~ 1 ~").decay(0.15).sustain(0).lpf(2500).delay(0.4).delaytime(0.375).gain(0.35).degradeBy(0.3)`
-    ]
-  },
-
-  microtonal: {
-    name: '🎶 마이크로톤',
-    bpm: 90,
-    description: '비표준 음계 · 실험적',
-    layers: [
-      `note("<c3 c#3 d3 eb3 e3 f3 f#3 g3>").sound("sine").decay(0.3).sustain(0.5).gain(0.55).room(0.6)`,
-      `note("<c2 db2 c2 b1>").sound("sawtooth").attack(0.3).release(1.5).lpf(1200).gain(0.5).room(0.7)`,
-      `note("<c5 db5 d5 eb5 e5 eb5 d5 db5>").sound("triangle").struct("1 ~ 1 1 ~ 1 ~ 1").decay(0.2).sustain(0.4).gain(0.45).delay(0.4).delaytime(0.5).room(0.6)`
-    ]
-  },
-
-  concrete: {
-    name: '🎞️ 뮤직 콩크레트',
-    bpm: 80,
-    description: '샘플 콜라주 · 역재생',
-    layers: [
-      `sound("bd:3 ~ sd:2 ~ hh:4 ~ cp:1 ~").rev().gain(1.1).room(0.5)`,
-      `sound("<cr oh rim cb>").gain(0.6).shape(0.3).room(0.4)`,
-      `sound("noise*2").gain(0.3).hpf(2000).degradeBy(0.4)`,
-      `note("<c3 ~ g3 ~ e3 ~ a3 ~>").sound("square").decay(0.15).sustain(0).lpf(rand.range(500,3000)).gain(0.4).room(0.6).delay(0.45).delaytime(0.375)`
     ]
   },
 
@@ -1292,7 +1185,7 @@ window.CATEGORIES = {
     label: '🎛️ EDM / Club',
     styles: [
       'ibiza', 'deephouse', 'techhouse', 'futurehouse', 'tribalhouse',
-      'detroit', 'minimaltechno', 'industrial', 'techno',
+      'detroit', 'techno',
       'uplifting', 'progressive', 'psytrance', 'trance',
       'hardstyle', 'hardcore', 'gabber',
       'dubstep', 'dnb', 'liquiddnb', 'jungle', 'breakbeat',
@@ -1301,14 +1194,14 @@ window.CATEGORIES = {
   },
   chill: {
     label: '🌆 Chill / Downtempo',
-    styles: ['lofi', 'chillhop', 'downtempo', 'triphop', 'balearic', 'ambient', 'newage', 'drone', 'vaporwave', 'futuregarage']
+    styles: ['lofi', 'chillhop', 'downtempo', 'triphop', 'balearic', 'ambient', 'vaporwave', 'futuregarage']
   },
   jazz: {
     label: '🎷 Jazz / Soul / Funk',
     styles: [
       'smoothjazz', 'bebop', 'cooljazz', 'fusion', 'jazz',
       'bossa', 'latinjazz',
-      'neosoul', 'funksoul', 'motown', 'disco', 'acidjazz'
+      'neosoul', 'funksoul', 'motown', 'disco'
     ]
   },
   hiphop: {
@@ -1326,11 +1219,11 @@ window.CATEGORIES = {
   },
   classical: {
     label: '🎻 Classical / Cinematic',
-    styles: ['neoclassic', 'baroque', 'minimalism', 'cinematic', 'pianosolo', 'strings', 'horror']
+    styles: ['neoclassic', 'baroque', 'cinematic', 'strings', 'horror']
   },
   world: {
     label: '🌏 World / Experimental',
-    styles: ['gugak', 'gamelan', 'raga', 'afrobeat', 'flamenco', 'celtic', 'reggaeton', 'bhangra', 'glitch', 'noise', 'generative', 'microtonal', 'concrete']
+    styles: ['gugak', 'gamelan', 'raga', 'afrobeat', 'flamenco', 'celtic', 'reggaeton', 'bhangra', 'glitch', 'noise', 'generative']
   }
 };
 
