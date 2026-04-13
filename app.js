@@ -141,13 +141,6 @@ function renderCode(styleKey, mixStyleKey, volume, seed, djFx) {
 }
 
 // ─── 재생/정지 ────────────────────────────────
-const DJ_CONTROL_IDS = [
-  'mixSelect', 'regenBtn',
-  'xfSlider', 'volumeSlider', 'lpfSlider', 'hpfSlider',
-  'reverbSlider', 'delaySlider', 'swingSlider', 'shapeSlider', 'tempoSlider',
-  'buildBtn', 'dropBtn', 'sidechainBtn', 'drumMuteBtn', 'melMuteBtn', 'fxResetBtn',
-];
-
 function setPlayingState(playing) {
   state.playing = playing;
   const playBtn = document.getElementById('playBtn');
@@ -156,12 +149,6 @@ function setPlayingState(playing) {
   stopBtn.classList.toggle('active', playing);
   playBtn.disabled = playing;
   stopBtn.disabled = !playing;
-  const djConsole = document.querySelector('.dj-console');
-  if (djConsole) djConsole.classList.toggle('disabled', !playing);
-  for (const id of DJ_CONTROL_IDS) {
-    const el = document.getElementById(id);
-    if (el) el.disabled = !playing;
-  }
 }
 
 function playCurrent() {
@@ -383,17 +370,24 @@ function syncDjUI() {
   document.getElementById('sidechainBtn').classList.toggle('active', fx.sidechain);
 }
 
-document.getElementById('buildBtn').addEventListener('click', () => {
+function flashActive(btn) {
+  btn.classList.add('active');
+  setTimeout(() => btn.classList.remove('active'), 320);
+}
+
+document.getElementById('buildBtn').addEventListener('click', (e) => {
   state.djFx = { ...DJ_FX_BUILDUP };
   syncDjUI();
   generate(state.currentStyle, { newSeed: false });
+  flashActive(e.currentTarget);
 });
 
-document.getElementById('dropBtn').addEventListener('click', () => {
+document.getElementById('dropBtn').addEventListener('click', (e) => {
   // DROP: 리셋 + 일순간 크러시/킥 강조
   state.djFx = { ...DJ_FX_DEFAULT, shape: 0.25 };
   syncDjUI();
   generate(state.currentStyle, { newSeed: true });
+  flashActive(e.currentTarget);
 });
 
 document.getElementById('fxResetBtn').addEventListener('click', () => {

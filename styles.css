@@ -276,17 +276,6 @@ main {
   border-radius: 16px;
   padding: 18px 22px;
   margin-bottom: 20px;
-  transition: opacity 0.2s;
-}
-
-.dj-console.disabled {
-  opacity: 0.45;
-}
-
-.dj-console.disabled button,
-.dj-console.disabled input,
-.dj-console.disabled select {
-  cursor: not-allowed;
 }
 
 .dj-header {
@@ -350,7 +339,7 @@ main {
   flex-wrap: wrap;
 }
 
-.dj-toggle, .dj-reset {
+.dj-toggle, .dj-reset, .dj-action {
   background: var(--panel-hi);
   color: var(--text);
   border: 1px solid var(--border);
@@ -358,43 +347,23 @@ main {
   border-radius: 10px;
   cursor: pointer;
   font-size: 0.85rem;
+  font-weight: 600;
   transition: all 0.2s;
 }
 
-.dj-toggle:hover, .dj-reset:hover {
+.dj-toggle:hover, .dj-reset:hover, .dj-action:hover {
   border-color: var(--accent);
+  transform: translateY(-1px);
 }
 
 .dj-toggle.muted,
-.dj-toggle.active {
+.dj-toggle.active,
+.dj-action.active {
   background: linear-gradient(90deg, var(--accent), var(--accent2));
   color: white;
   border-color: transparent;
   box-shadow: 0 0 15px rgba(255, 107, 157, 0.4);
 }
-
-.dj-action {
-  color: white;
-  border: 1px solid transparent;
-  padding: 9px 16px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 700;
-  transition: all 0.2s;
-}
-
-.dj-action.build {
-  background: linear-gradient(90deg, #f59e0b, #f97316);
-  box-shadow: 0 0 12px rgba(249, 115, 22, 0.3);
-}
-
-.dj-action.drop {
-  background: linear-gradient(90deg, #ef4444, #ec4899);
-  box-shadow: 0 0 12px rgba(239, 68, 68, 0.35);
-}
-
-.dj-action:hover { transform: translateY(-1px); filter: brightness(1.1); }
 
 .dj-reset {
   margin-left: auto;
