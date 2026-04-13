@@ -42,11 +42,26 @@
       <select id="mixSelect" class="dj-mix-select"></select>
       <button id="regenBtn" class="dj-regen-btn">🎲 변주</button>
     </div>
+    <label class="dj-slider dj-xf">
+      <span class="dj-label">🎚️ 크로스페이더 <span class="dj-hint-inline">(믹스 시 A↔B)</span></span>
+      <input type="range" id="xfSlider" min="0" max="1" step="0.02" value="0.5">
+      <span class="dj-val" id="xfSliderVal">50/50</span>
+    </label>
     <div class="dj-sliders">
       <label class="dj-slider">
-        <span class="dj-label">🎚️ 필터</span>
+        <span class="dj-label">🔊 볼륨</span>
+        <input type="range" id="volumeSlider" min="0" max="1.2" step="0.05" value="0.8">
+        <span class="dj-val" id="volumeValue">80%</span>
+      </label>
+      <label class="dj-slider">
+        <span class="dj-label">🔽 LPF</span>
         <input type="range" id="lpfSlider" min="200" max="20000" step="100" value="20000">
         <span class="dj-val" id="lpfSliderVal">OFF</span>
+      </label>
+      <label class="dj-slider">
+        <span class="dj-label">🔼 HPF</span>
+        <input type="range" id="hpfSlider" min="0" max="2000" step="20" value="0">
+        <span class="dj-val" id="hpfSliderVal">OFF</span>
       </label>
       <label class="dj-slider">
         <span class="dj-label">💫 리버브</span>
@@ -59,6 +74,11 @@
         <span class="dj-val" id="delaySliderVal">0%</span>
       </label>
       <label class="dj-slider">
+        <span class="dj-label">🎷 스윙</span>
+        <input type="range" id="swingSlider" min="0" max="0.3" step="0.01" value="0">
+        <span class="dj-val" id="swingSliderVal">0%</span>
+      </label>
+      <label class="dj-slider">
         <span class="dj-label">🔥 크러시</span>
         <input type="range" id="shapeSlider" min="0" max="0.7" step="0.05" value="0">
         <span class="dj-val" id="shapeSliderVal">0%</span>
@@ -68,13 +88,11 @@
         <input type="range" id="tempoSlider" min="0.5" max="2" step="0.05" value="1">
         <span class="dj-val" id="tempoSliderVal">1.00x</span>
       </label>
-      <label class="dj-slider">
-        <span class="dj-label">🔊 볼륨</span>
-        <input type="range" id="volumeSlider" min="0" max="1.2" step="0.05" value="0.8">
-        <span class="dj-val" id="volumeValue">80%</span>
-      </label>
     </div>
     <div class="dj-toggles">
+      <button id="buildBtn" class="dj-action build">⚡ BUILD</button>
+      <button id="dropBtn" class="dj-action drop">💥 DROP</button>
+      <button id="sidechainBtn" class="dj-toggle">💓 사이드체인</button>
       <button id="drumMuteBtn" class="dj-toggle">🥁 드럼 뮤트</button>
       <button id="melMuteBtn" class="dj-toggle">🎹 멜로디 뮤트</button>
       <button id="fxResetBtn" class="dj-reset">🔄 리셋</button>

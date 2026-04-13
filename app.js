@@ -10,14 +10,30 @@ const state = {
   playing: false,
   seed: 0,
   djFx: {
-    lpf: 20000,     // 필터 (low-pass, 20000 = full open)
-    reverb: 0,      // 리버브 wet
-    delay: 0,       // 딜레이 wet
-    shape: 0,       // 디스토션
-    tempoMul: 1.0,  // 템포 배수
+    lpf: 20000,      // 로패스 필터 (20000 = full open)
+    hpf: 0,          // 하이패스 필터 (0 = off)
+    reverb: 0,       // 리버브 wet
+    delay: 0,        // 딜레이 wet
+    shape: 0,        // 디스토션
+    swing: 0,        // 스윙 양 (0~0.3)
+    tempoMul: 1.0,   // 템포 배수
+    crossfade: 0.5,  // 크로스페이더 (믹스 시 A↔B, 0=A만 / 1=B만)
+    sidechain: false,// 사이드체인 펌핑 (멜로디 덕킹)
     drumMute: false,
     melMute: false
   }
+};
+
+const DJ_FX_DEFAULT = {
+  lpf: 20000, hpf: 0, reverb: 0, delay: 0, shape: 0,
+  swing: 0, tempoMul: 1.0, crossfade: 0.5,
+  sidechain: false, drumMute: false, melMute: false
+};
+
+const DJ_FX_BUILDUP = {
+  lpf: 20000, hpf: 500, reverb: 0.5, delay: 0.3, shape: 0.15,
+  swing: 0, tempoMul: 1.0, crossfade: 0.5,
+  sidechain: false, drumMute: false, melMute: false
 };
 
 // ─── 변주 생성 ───────────────────────────────
@@ -56,36 +72,60 @@ function renderCode(styleKey, mixStyleKey, volume, seed, djFx) {
   const t = window.TEMPLATES[styleKey];
   if (!t) return '';
 
-  let layers = [...t.layers];
   let bpm = t.bpm;
   let name = t.name;
+  let aLayers = applyVariation([...t.layers], seed);
+  let bLayers = null;
 
-  // 믹스 적용
   if (mixStyleKey && mixStyleKey !== styleKey && window.TEMPLATES[mixStyleKey]) {
     const t2 = window.TEMPLATES[mixStyleKey];
     bpm = Math.round((t.bpm + t2.bpm) / 2);
-    name = `${t.name} + ${t2.name}`;
-    const aDrums = t.layers.filter(l => DRUM_RE.test(l));
-    const bMelodic = t2.layers.filter(l => !DRUM_RE.test(l));
-    layers = [...aDrums, ...bMelodic];
+    name = `${t.name} × ${t2.name}`;
+    bLayers = applyVariation([...t2.layers], seed);
   }
 
-  layers = applyVariation(layers, seed);
+  // 뮤트 필터
+  const muteFilter = (layers) => {
+    if (djFx.drumMute) layers = layers.filter(l => !DRUM_RE.test(l));
+    if (djFx.melMute) layers = layers.filter(l => DRUM_RE.test(l));
+    return layers;
+  };
+  aLayers = muteFilter(aLayers);
+  if (bLayers) bLayers = muteFilter(bLayers);
 
-  // DJ 뮤트 적용
-  if (djFx.drumMute) layers = layers.filter(l => !DRUM_RE.test(l));
-  if (djFx.melMute) layers = layers.filter(l => DRUM_RE.test(l));
-  if (layers.length === 0) layers = ['silence']; // 방어
+  // 크로스페이더 (믹스 시) — 등출력 곡선
+  let combined;
+  if (bLayers) {
+    const xf = djFx.crossfade;
+    const aG = Math.cos(xf * Math.PI / 2).toFixed(3);
+    const bG = Math.sin(xf * Math.PI / 2).toFixed(3);
+    combined = [
+      ...aLayers.map(l => `${l}.gain(${aG})`),
+      ...bLayers.map(l => `${l}.gain(${bG})`)
+    ];
+  } else {
+    combined = aLayers;
+  }
 
-  const body = layers.map(l => '  ' + l).join(',\n');
+  // 사이드체인: 멜로디 레이어만 킥에 맞춰 덕킹
+  if (djFx.sidechain) {
+    combined = combined.map(l =>
+      DRUM_RE.test(l) ? l : `${l}.gain(sine.range(0.35,1).fast(4))`
+    );
+  }
 
-  // FX 체인 조립
+  if (combined.length === 0) combined = ['silence'];
+  const body = combined.map(l => '  ' + l).join(',\n');
+
+  // 스택 FX 체인
   let fx = `.gain(${volume.toFixed(2)})`;
   if (Math.abs(djFx.tempoMul - 1) > 0.001) fx += `.fast(${djFx.tempoMul.toFixed(2)})`;
   if (djFx.lpf < 19999) fx += `.lpf(${Math.round(djFx.lpf)})`;
+  if (djFx.hpf > 20) fx += `.hpf(${Math.round(djFx.hpf)})`;
   if (djFx.reverb > 0) fx += `.room(${djFx.reverb.toFixed(2)})`;
   if (djFx.delay > 0) fx += `.delay(${djFx.delay.toFixed(2)}).delaytime(0.375).delayfeedback(0.5)`;
   if (djFx.shape > 0) fx += `.shape(${djFx.shape.toFixed(2)})`;
+  if (djFx.swing > 0.001) fx += `.swingBy(${djFx.swing.toFixed(2)},4)`;
 
   const code = `// ${name} · ${bpm} BPM\ncps(${(bpm / 60 / 4).toFixed(4)})\n\nstack(\n${body}\n)${fx}`;
   return { code, bpm, name };
@@ -263,10 +303,17 @@ function bindDjSlider(id, key, formatter) {
 }
 
 bindDjSlider('lpfSlider', 'lpf', v => v >= 19999 ? 'OFF' : Math.round(v) + 'Hz');
+bindDjSlider('hpfSlider', 'hpf', v => v <= 20 ? 'OFF' : Math.round(v) + 'Hz');
 bindDjSlider('reverbSlider', 'reverb', v => Math.round(v * 100) + '%');
 bindDjSlider('delaySlider', 'delay', v => Math.round(v * 100) + '%');
 bindDjSlider('shapeSlider', 'shape', v => Math.round(v * 100) + '%');
+bindDjSlider('swingSlider', 'swing', v => Math.round(v * 100) + '%');
 bindDjSlider('tempoSlider', 'tempoMul', v => v.toFixed(2) + 'x');
+bindDjSlider('xfSlider', 'crossfade', v => {
+  if (v < 0.5) return 'A ' + Math.round((1 - v * 2) * 100) + '%';
+  if (v > 0.5) return 'B ' + Math.round((v * 2 - 1) * 100) + '%';
+  return '50/50';
+});
 
 document.getElementById('drumMuteBtn').addEventListener('click', () => {
   state.djFx.drumMute = !state.djFx.drumMute;
@@ -280,22 +327,58 @@ document.getElementById('melMuteBtn').addEventListener('click', () => {
   generate(state.currentStyle, { newSeed: false });
 });
 
+document.getElementById('sidechainBtn').addEventListener('click', () => {
+  state.djFx.sidechain = !state.djFx.sidechain;
+  document.getElementById('sidechainBtn').classList.toggle('active', state.djFx.sidechain);
+  generate(state.currentStyle, { newSeed: false });
+});
+
+// FX 슬라이더 + 라벨 + 토글 UI 상태를 djFx로부터 복원
+function syncDjUI() {
+  const fx = state.djFx;
+  const setSlider = (id, val, labelFn) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.value = val;
+      const lbl = document.getElementById(id + 'Val');
+      if (lbl) lbl.textContent = labelFn(val);
+    }
+  };
+  setSlider('lpfSlider', fx.lpf, v => v >= 19999 ? 'OFF' : Math.round(v) + 'Hz');
+  setSlider('hpfSlider', fx.hpf, v => v <= 20 ? 'OFF' : Math.round(v) + 'Hz');
+  setSlider('reverbSlider', fx.reverb, v => Math.round(v * 100) + '%');
+  setSlider('delaySlider', fx.delay, v => Math.round(v * 100) + '%');
+  setSlider('shapeSlider', fx.shape, v => Math.round(v * 100) + '%');
+  setSlider('swingSlider', fx.swing, v => Math.round(v * 100) + '%');
+  setSlider('tempoSlider', fx.tempoMul, v => v.toFixed(2) + 'x');
+  setSlider('xfSlider', fx.crossfade, v => {
+    if (v < 0.5) return 'A ' + Math.round((1 - v * 2) * 100) + '%';
+    if (v > 0.5) return 'B ' + Math.round((v * 2 - 1) * 100) + '%';
+    return '50/50';
+  });
+  document.getElementById('drumMuteBtn').classList.toggle('muted', fx.drumMute);
+  document.getElementById('melMuteBtn').classList.toggle('muted', fx.melMute);
+  document.getElementById('sidechainBtn').classList.toggle('active', fx.sidechain);
+}
+
+document.getElementById('buildBtn').addEventListener('click', () => {
+  state.djFx = { ...DJ_FX_BUILDUP };
+  syncDjUI();
+  generate(state.currentStyle, { newSeed: false });
+});
+
+document.getElementById('dropBtn').addEventListener('click', () => {
+  // DROP: 리셋 + 일순간 크러시/킥 강조
+  state.djFx = { ...DJ_FX_DEFAULT, shape: 0.25 };
+  syncDjUI();
+  generate(state.currentStyle, { newSeed: true });
+});
+
 document.getElementById('fxResetBtn').addEventListener('click', () => {
   state.mixStyle = null;
   document.getElementById('mixSelect').value = '';
-  state.djFx = { lpf: 20000, reverb: 0, delay: 0, shape: 0, tempoMul: 1.0, drumMute: false, melMute: false };
-  document.getElementById('lpfSlider').value = 20000;
-  document.getElementById('reverbSlider').value = 0;
-  document.getElementById('delaySlider').value = 0;
-  document.getElementById('shapeSlider').value = 0;
-  document.getElementById('tempoSlider').value = 1;
-  document.getElementById('lpfSliderVal').textContent = 'OFF';
-  document.getElementById('reverbSliderVal').textContent = '0%';
-  document.getElementById('delaySliderVal').textContent = '0%';
-  document.getElementById('shapeSliderVal').textContent = '0%';
-  document.getElementById('tempoSliderVal').textContent = '1.00x';
-  document.getElementById('drumMuteBtn').classList.remove('muted');
-  document.getElementById('melMuteBtn').classList.remove('muted');
+  state.djFx = { ...DJ_FX_DEFAULT };
+  syncDjUI();
   generate(state.currentStyle, { newSeed: false });
 });
 
