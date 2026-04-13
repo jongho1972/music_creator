@@ -50,7 +50,16 @@ function seededPick(arr, seed, count) {
   return out;
 }
 
-function applyVariation(layers, seed) {
+function applyVariation(baseLayers, seed, variants) {
+  // variants 배열이 있으면 먼저 시드로 base/variant 중 하나 선택
+  let source = baseLayers;
+  if (Array.isArray(variants) && variants.length > 0) {
+    const pool = [baseLayers, ...variants];
+    const idx = Math.abs(seed) % pool.length;
+    source = pool[idx];
+  }
+  const layers = [...source];
+
   // 시드로 드럼은 유지하고 멜로디 레이어만 섞음
   const drumLayers = layers.filter(l => /sound\("(bd|sd|hh|cp|cr|rim|cb|oh)/.test(l));
   const melodicLayers = layers.filter(l => !/sound\("(bd|sd|hh|cp|cr|rim|cb|oh)/.test(l));
@@ -74,14 +83,14 @@ function renderCode(styleKey, mixStyleKey, volume, seed, djFx) {
 
   let bpm = t.bpm;
   let name = t.name;
-  let aLayers = applyVariation([...t.layers], seed);
+  let aLayers = applyVariation(t.layers, seed, t.variants);
   let bLayers = null;
 
   if (mixStyleKey && mixStyleKey !== styleKey && window.TEMPLATES[mixStyleKey]) {
     const t2 = window.TEMPLATES[mixStyleKey];
     bpm = Math.round((t.bpm + t2.bpm) / 2);
     name = `${t.name} × ${t2.name}`;
-    bLayers = applyVariation([...t2.layers], seed);
+    bLayers = applyVariation(t2.layers, seed, t2.variants);
   }
 
   // 뮤트 필터

@@ -16,6 +16,25 @@ window.TEMPLATES = {
       `note("<a1 a1 f1 g1>").sound("sawtooth").struct("1 1 ~ 1 1 ~ 1 1").lpf(sine.range(300, 900).slow(4)).lpq(12).gain(0.7).decay(0.08).sustain(0.4).shape(0.3)`,
       `note("<[a3 c4 e4 a4] [f3 a3 c4 f4] [c3 e3 g3 c4] [g3 b3 d4 g4]>*2").sound("square").decay(0.2).sustain(0).lpf(sine.range(900, 2800).slow(8)).lpq(10).delay(0.4).delaytime(0.375).delayfeedback(0.5).room(0.5).gain(0.35).pan(sine.range(0.2, 0.8).slow(3))`,
       `note("<a2 f2 c3 g2>").sound("sawtooth").attack(0.5).release(1).lpf(sine.range(500, 1400).slow(16)).room(0.8).gain(0.25)`
+    ],
+    variants: [
+      [
+        `sound("bd:4*4").gain(1.3).shape(0.35).lpf(110)`,
+        `sound("~ cp ~ cp").gain(0.85).room(0.4).lpf(4000)`,
+        `sound("hh*8").gain(0.4).decay(0.15).pan(sine.range(0.35, 0.65).slow(3))`,
+        `note("<[e4,a4,c5] [d4,f4,a4] [c4,e4,g4] [d4,f4,a4]>").sound("triangle").attack(0.1).decay(0.5).sustain(0.4).lpf(3000).delay(0.5).delaytime(0.375).delayfeedback(0.5).room(0.7).gain(0.45)`,
+        `note("<a2 f2 c3 g2>").sound("sine").struct("1 ~ ~ ~").gain(1.1).decay(0.4).sustain(0.6).lpf(200)`,
+        `note("<a5 ~ e5 ~ c6 ~ b5 ~>").sound("sine").attack(0.05).decay(0.8).sustain(0.3).lpf(4000).room(0.9).delay(0.5).delaytime(0.375).gain(0.3)`
+      ],
+      [
+        `sound("bd:4*4").gain(1.45).shape(0.55).lpf(140)`,
+        `sound("~ cp ~ cp").gain(0.95).room(0.2).shape(0.3)`,
+        `sound("hh*16").gain(0.5).pan(sine.range(0.25, 0.75).slow(2))`,
+        `sound("~ oh ~ oh").gain(0.55).decay(0.18)`,
+        `note("<a1 a1 a1 [a1 ~ a1] f1 f1 g1 [g1 a1 g1]>").sound("sawtooth").struct("1 ~ ~ ~ 1 ~ ~ ~").gain(1.3).decay(0.3).sustain(0.8).lpf(120).shape(0.4)`,
+        `note("<[a3 e4 c5 e4] [f3 c4 a4 c4] [g3 d4 b4 d4] [a3 e4 c5 e4]>*4").sound("sawtooth").decay(0.15).sustain(0).lpf(sine.range(1200, 3500).slow(8)).lpq(12).delay(0.4).delaytime(0.375).delayfeedback(0.55).room(0.5).gain(0.4).pan(sine.range(0.2, 0.8).slow(2))`,
+        `note("<a2 f2 c3 g2>").sound("sawtooth").attack(0.3).release(0.8).lpf(1800).room(0.6).gain(0.3)`
+      ]
     ]
   },
 
@@ -59,6 +78,24 @@ window.TEMPLATES = {
       `sound("hh*8").gain(0.4).pan(sine.range(0.4, 0.6).slow(4)).degradeBy(0.3).lpf(5000)`,
       `note("<[c3,e3,g3,b3] [a2,c3,e3,g3] [f2,a2,c3,e3] [g2,b2,d3,f3]>").sound("sawtooth").attack(0.2).release(0.8).lpf(1200).gain(0.35).room(0.6)`,
       `note("<c2 a1 f1 g1>").sound("sine").attack(0.05).decay(0.2).sustain(0.6).gain(0.7).lpf(400)`
+    ],
+    variants: [
+      [
+        `sound("bd:2 ~ ~ bd:2 ~ ~ bd:2 ~").gain(0.85).lpf(280)`,
+        `sound("~ ~ sd:3 ~ ~ ~ sd:3 ~").gain(0.6).lpf(1800).room(0.5)`,
+        `sound("hh*16").gain(0.25).degradeBy(0.4).lpf(4000)`,
+        `sound("noise*2").gain(0.12).hpf(3000).lpf(6000)`,
+        `note("<[d3,f3,a3,c4] [bb2,d3,f3,a3] [eb3,g3,bb3,d4] [a2,c3,e3,g3]>").sound("triangle").attack(0.3).release(1).lpf(1000).gain(0.4).room(0.7)`,
+        `note("<d2 bb1 eb2 a1>").sound("sine").attack(0.1).decay(0.3).sustain(0.5).gain(0.65).lpf(380)`
+      ],
+      [
+        `sound("bd:2 ~ ~ bd:2 ~ bd:2 ~ ~").gain(0.95).lpf(320)`,
+        `sound("~ ~ sd:3 ~ ~ ~ sd:3 ~").gain(0.75).lpf(2200).room(0.35)`,
+        `sound("hh*8").gain(0.45).pan(sine.range(0.35, 0.65).slow(4)).lpf(5000)`,
+        `note("<[e3,g3,b3,d4] [c3,e3,g3,b3] [a2,c3,e3,g3] [d3,f3,a3,c4]>").sound("sawtooth").attack(0.15).release(0.6).lpf(1400).gain(0.4).room(0.6)`,
+        `note("<e2 c2 a1 d2>").sound("sine").attack(0.03).decay(0.25).sustain(0.7).gain(0.75).lpf(420)`,
+        `note("<b4 ~ d5 ~ e5 ~ d5 ~>").sound("triangle").decay(0.3).sustain(0.3).lpf(2500).delay(0.4).delaytime(0.375).delayfeedback(0.4).room(0.6).gain(0.3)`
+      ]
     ]
   },
 
@@ -74,6 +111,16 @@ window.TEMPLATES = {
       `sound("hh:1 ~ ~ ~ ~ ~ hh:1 ~").gain(0.5).decay(0.08)`,
       `note("<f4 ab4 c5 bb4 ab4 f4 eb4 c4>").sound("square").decay(0.4).sustain(0.2).lpf(1800).lpq(5).delay(0.3).delaytime(0.375).delayfeedback(0.4).room(0.6).gain(0.4)`,
       `note("<f2 eb2 db2 c2>").sound("sawtooth").attack(0.6).release(1).lpf(600).room(0.8).gain(0.3)`
+    ],
+    variants: [
+      [
+        `sound("bd:7").struct("1 ~ ~ 1 ~ ~ 1 ~").gain(1.35).shape(0.35)`,
+        `note("<c1 c1 eb1 c1 bb0 c1 ab0 c1>").sound("sine").struct("1 ~ ~ 1 ~ ~ 1 ~").gain(1.5).attack(0.01).decay(0.7).sustain(0.85).lpf(100)`,
+        `sound("~ ~ ~ ~ cp ~ ~ ~").gain(0.95).room(0.3)`,
+        `sound("hh*32").gain("0.35 0.15 0.45 0.15 0.3 0.5 0.2 0.15 0.35 0.15 0.45 0.15 0.3 0.5 0.2 0.15").pan(sine.range(0.4, 0.6).slow(2))`,
+        `note("<c3 eb3 g3 bb3 ab3 g3 eb3 c3>").sound("square").decay(0.3).sustain(0.15).lpf(1400).lpq(8).delay(0.4).delaytime(0.375).delayfeedback(0.5).room(0.7).gain(0.35).shape(0.2)`,
+        `note("<c2 bb1 ab1 g1>").sound("sawtooth").attack(0.8).release(1.5).lpf(500).room(0.9).gain(0.3)`
+      ]
     ]
   },
 
@@ -91,6 +138,19 @@ window.TEMPLATES = {
       `note("<[a3 c4 e4 a4 e4 c4] [f3 a3 c4 f4 c4 a3] [g3 b3 d4 g4 d4 b3] [e3 g3 b3 e4 b3 g3]>*2").sound("sawtooth").decay(0.15).sustain(0).lpf(sine.range(1000, 4000).slow(16)).lpq(15).delay(0.5).delaytime(0.375).delayfeedback(0.6).room(0.6).gain(0.45).pan(sine.range(0.2, 0.8).slow(2))`,
       `note("<a4 ~ e4 ~ c5 ~ b4 ~>").sound("sawtooth").decay(0.5).sustain(0.5).lpf(sine.range(1500, 5000).slow(32)).lpq(8).delay(0.4).delaytime(0.375).delayfeedback(0.5).room(0.7).gain(0.4)`,
       `note("<[a2,c3,e3] [f2,a2,c3] [g2,b2,d3] [e2,g2,b2]>").sound("sawtooth").attack(1).release(2).lpf(sine.range(800, 2500).slow(16)).room(0.9).gain(0.3)`
+    ],
+    variants: [
+      [
+        `sound("bd:4*4").gain(1.35).shape(0.45).lpf(140)`,
+        `note("a1").sound("sine").struct("1 ~ ~ ~").gain(1.15).decay(0.25)`,
+        `note("a1").sound("sawtooth").struct("~ 1 1 1").lpf(600).lpq(10).gain(0.75).decay(0.12).sustain(0.35).shape(0.35)`,
+        `sound("~ cp ~ cp").gain(0.85).room(0.35)`,
+        `sound("~ hh:1 ~ hh:1").gain(0.6)`,
+        `sound("hh*16").gain(0.35).degradeBy(0.08)`,
+        `note("<[a3 e4 a4 c5 e5 c5 a4 e4] [f3 c4 f4 a4 c5 a4 f4 c4] [g3 d4 g4 b4 d5 b4 g4 d4] [e3 b3 e4 g4 b4 g4 e4 b3]>*2").sound("sawtooth").decay(0.12).sustain(0).lpf(sine.range(1500, 5000).slow(16)).lpq(18).delay(0.5).delaytime(0.375).delayfeedback(0.65).room(0.65).gain(0.5).pan(sine.range(0.15, 0.85).slow(2))`,
+        `note("<a5 ~ e5 ~ c6 ~ b5 ~>").sound("sawtooth").decay(0.6).sustain(0.5).lpf(sine.range(2000, 6000).slow(32)).lpq(10).delay(0.5).delaytime(0.375).delayfeedback(0.55).room(0.75).gain(0.45)`,
+        `note("<[a2,c3,e3,a3] [f2,a2,c3,f3] [g2,b2,d3,g3] [e2,g2,b2,e3]>").sound("sawtooth").attack(1.2).release(2.5).lpf(sine.range(1000, 3000).slow(16)).room(0.9).gain(0.35)`
+      ]
     ]
   },
 
@@ -118,6 +178,16 @@ window.TEMPLATES = {
       `note("<[a2 e3 a3 e3] [f2 c3 f3 c3] [g2 d3 g3 d3] [e2 b2 e3 b2]>*2").sound("sawtooth").attack(0.005).decay(0.1).sustain(0.3).lpf(sine.range(400, 1500).slow(8)).lpq(8).gain(0.7).shape(0.2)`,
       `note("<a4 ~ c5 e5 ~ d5 b4 ~>").sound("sawtooth").attack(0.02).decay(0.5).sustain(0.4).lpf(3000).lpq(5).delay(0.4).delaytime(0.375).delayfeedback(0.5).room(0.6).gain(0.45)`,
       `note("<[a2,c3,e3] [f2,a2,c3] [g2,b2,d3] [e2,g2,b2]>").sound("sawtooth").attack(0.5).release(1).lpf(1200).room(0.8).gain(0.25)`
+    ],
+    variants: [
+      [
+        `sound("bd:3*4").gain(1.3).shape(0.4).lpf(180)`,
+        `sound("~ sd:2 ~ sd:2").gain(0.9).room(0.8).shape(0.2)`,
+        `sound("hh*8").gain(0.45).decay(0.12)`,
+        `note("<[c2 g2 c3 g2] [ab1 eb2 ab2 eb2] [bb1 f2 bb2 f2] [g1 d2 g2 d2]>*2").sound("sawtooth").attack(0.005).decay(0.08).sustain(0.25).lpf(sine.range(300, 1800).slow(8)).lpq(12).gain(0.8).shape(0.4)`,
+        `note("<c4 ~ eb4 g4 ~ f4 bb3 ~>").sound("square").attack(0.02).decay(0.4).sustain(0.4).lpf(2800).lpq(6).delay(0.4).delaytime(0.375).delayfeedback(0.55).room(0.7).gain(0.5).shape(0.2)`,
+        `note("<[c2,eb2,g2] [ab1,c2,eb2] [bb1,d2,f2] [g1,bb1,d2]>").sound("sawtooth").attack(0.5).release(1).lpf(1000).room(0.8).gain(0.3)`
+      ]
     ]
   },
 
@@ -1067,6 +1137,152 @@ window.TEMPLATES = {
       `sound("noise*2").gain(0.3).hpf(2000).degradeBy(0.4)`,
       `note("<c3 ~ g3 ~ e3 ~ a3 ~>").sound("square").decay(0.15).sustain(0).lpf(rand.range(500,3000)).gain(0.4).room(0.6).delay(0.45).delaytime(0.375)`
     ]
+  },
+
+  // ─── 신규 추가 장르 ───────────────────────────
+  ukgarage: {
+    name: '🇬🇧 UK 게러지',
+    bpm: 130,
+    description: '2-step 셔플 · 스윙 하이햇',
+    layers: [
+      `sound("bd ~ ~ bd ~ bd ~ ~").gain(1.3).shape(0.3)`,
+      `sound("~ ~ sd ~ ~ ~ sd ~").gain(0.95).room(0.25)`,
+      `sound("hh*8").gain("0.5 0.3 0.4 0.3".fast(2)).pan(sine.range(0.3, 0.7).slow(2))`,
+      `sound("~ ~ ~ hh:1 ~ hh:1 ~ ~").gain(0.45).decay(0.08)`,
+      `note("<c2 c2 g1 c2 f1 f1 g1 f1>").sound("sawtooth").struct("1 ~ 1 ~ 1 ~ ~ 1").lpf(sine.range(300, 1200).slow(4)).lpq(10).gain(0.85).decay(0.2).sustain(0.3).shape(0.3)`,
+      `note("<[c4,eb4,g4] [ab3,c4,eb4] [bb3,d4,f4] [c4,eb4,g4]>*2").sound("square").decay(0.3).sustain(0.2).lpf(2000).room(0.4).delay(0.3).delaytime(0.375).gain(0.4)`,
+      `note("<c5 ~ eb5 ~ g5 ~ f5 ~>").sound("triangle").decay(0.25).sustain(0.3).lpf(3000).delay(0.35).delaytime(0.375).delayfeedback(0.45).room(0.5).gain(0.35)`
+    ]
+  },
+
+  phonk: {
+    name: '🛻 폰크',
+    bpm: 140,
+    description: '멤피스 · 카우벨 · 왜곡 808',
+    layers: [
+      `sound("bd:7*4").gain(1.4).shape(0.5).lpf(200)`,
+      `sound("~ cp ~ cp").gain(0.9).room(0.3).shape(0.4)`,
+      `sound("cb*8").gain("0.55 0.3 0.45 0.65 0.3 0.5 0.4 0.3").pan(sine.range(0.3, 0.7).slow(2))`,
+      `sound("hh*16").gain(0.4).degradeBy(0.2)`,
+      `note("<c2 c2 eb2 c2 bb1 c2 ab1 c2>").sound("sawtooth").struct("1 ~ ~ 1 ~ ~ 1 ~").gain(1.2).lpf(500).decay(0.3).sustain(0.7).shape(0.6)`,
+      `note("<[c4,eb4,g4] [eb4,g4,bb4] [c4,eb4,g4] [bb3,d4,f4]>").sound("square").decay(0.3).sustain(0.1).lpf(1800).delay(0.35).delaytime(0.375).room(0.5).gain(0.35)`,
+      `note("<c3 ~ g3 ~ eb3 ~ bb2 ~>").sound("sine").decay(0.4).sustain(0.5).lpf(800).room(0.7).gain(0.3)`
+    ]
+  },
+
+  amapiano: {
+    name: '🇿🇦 아마피아노',
+    bpm: 112,
+    description: '로그 드럼 · 피아노 칠 하우스',
+    layers: [
+      `sound("bd ~ ~ bd ~ ~ bd ~").gain(1.25).shape(0.25).lpf(180)`,
+      `sound("~ ~ sd ~ ~ sd ~ ~").gain(0.85).room(0.3)`,
+      `sound("hh*8").gain("0.4 0.25 0.35 0.25".fast(2)).pan(sine.range(0.4, 0.6).slow(4))`,
+      `sound("~ ~ ~ cp ~ ~ cp ~").gain(0.55).room(0.4)`,
+      `note("<a1 a1 e2 a1 d2 a1 g1 a1>").sound("sine").struct("1 ~ 1 ~ 1 ~ 1 ~").gain(1.3).attack(0.01).decay(0.45).sustain(0.5).lpf(220)`,
+      `note("<[a3,c4,e4] [f3,a3,c4] [g3,b3,d4] [e3,g3,b3]>*2").sound("triangle").decay(0.4).sustain(0.3).lpf(2500).room(0.5).delay(0.3).delaytime(0.375).gain(0.45)`,
+      `note("<a4 ~ e4 ~ g4 ~ a4 ~>").sound("square").decay(0.2).sustain(0.2).lpf(3000).lpq(5).delay(0.4).delaytime(0.375).delayfeedback(0.4).room(0.6).gain(0.35)`
+    ]
+  },
+
+  hyperpop: {
+    name: '💖 하이퍼팝',
+    bpm: 160,
+    description: '과포화 리드 · 고속 쿵쿵쿵',
+    layers: [
+      `sound("bd*4").gain(1.4).shape(0.5)`,
+      `sound("~ cp ~ cp").gain(1.1).room(0.3).shape(0.3)`,
+      `sound("hh*16").gain("0.5 0.3 0.6 0.3".fast(2)).pan(sine.range(0.2, 0.8).slow(2))`,
+      `note("<a1 a1 c2 a1 e2 a1 d2 a1>").sound("sawtooth").struct("1 ~ 1 ~ 1 ~ 1 ~").lpf(800).gain(1.1).decay(0.2).sustain(0.4).shape(0.6)`,
+      `note("<[a3,c4,e4,a4] [f3,a3,c4,f4] [g3,b3,d4,g4] [e3,g3,b3,e4]>*4").sound("square").decay(0.1).sustain(0.3).lpf(4000).lpq(8).delay(0.4).delaytime(0.1875).delayfeedback(0.6).room(0.5).gain(0.5).pan(sine.range(0.1, 0.9).fast(2))`,
+      `note("<a5 c6 e6 d6 c6 a5 g5 e5>*2").sound("sine").decay(0.15).sustain(0.3).lpf(5000).delay(0.3).delaytime(0.1875).gain(0.45)`
+    ]
+  },
+
+  vaporwave: {
+    name: '🌴 베이퍼웨이브',
+    bpm: 70,
+    description: '슬로우다운 · 80s 샘플 · 몽환',
+    layers: [
+      `sound("bd:3 ~ ~ ~ bd:3 ~ ~ ~").gain(0.95).lpf(400)`,
+      `sound("~ ~ sd:2 ~ ~ ~ sd:2 ~").gain(0.7).room(0.7).lpf(2500)`,
+      `sound("hh*4").gain(0.3).lpf(4000).degradeBy(0.3)`,
+      `note("<[c3,e3,g3,b3] [a2,c3,e3,g3] [f2,a2,c3,e3] [g2,b2,d3,f3]>").sound("triangle").attack(0.3).release(1).lpf(1200).gain(0.45).room(0.8).delay(0.5).delaytime(0.5).delayfeedback(0.5)`,
+      `note("<c2 a1 f1 g1>").sound("sine").attack(0.1).decay(0.4).sustain(0.6).gain(0.7).lpf(300)`,
+      `note("<e4 ~ g4 ~ b4 ~ a4 ~>").sound("sawtooth").attack(0.05).decay(0.6).sustain(0.4).lpf(1800).room(0.9).delay(0.6).delaytime(0.5).gain(0.35)`
+    ]
+  },
+
+  futuregarage: {
+    name: '🌫️ 퓨처 게러지',
+    bpm: 130,
+    description: '스파스 2-step · 딥 서브',
+    layers: [
+      `sound("bd ~ ~ bd ~ ~ bd ~").gain(1.1).shape(0.2).lpf(200)`,
+      `sound("~ ~ sd ~ ~ ~ sd ~").gain(0.75).room(0.6).lpf(3000)`,
+      `sound("hh*8").gain("0.3 0.2 0.4 0.2".fast(2)).pan(sine.range(0.3, 0.7).slow(3)).degradeBy(0.2)`,
+      `note("<a1 ~ e2 ~ g1 ~ a1 ~>").sound("sine").attack(0.02).decay(0.4).sustain(0.6).gain(1.0).lpf(180)`,
+      `note("<[a3,c4,e4] [f3,a3,c4] [g3,b3,d4] [e3,g3,b3]>").sound("triangle").attack(0.2).release(1).lpf(1800).gain(0.4).room(0.8).delay(0.4).delaytime(0.375)`,
+      `note("<a4 ~ ~ c5 ~ e5 ~ d5>").sound("sawtooth").decay(0.3).sustain(0.2).lpf(2500).lpq(6).delay(0.5).delaytime(0.375).delayfeedback(0.5).room(0.7).gain(0.35)`
+    ]
+  },
+
+  jerseyclub: {
+    name: '🛏️ 저지 클럽',
+    bpm: 140,
+    description: '베드 스퀵 · 5번째 킥',
+    layers: [
+      `sound("bd bd ~ bd bd ~ bd ~").gain(1.35).shape(0.3)`,
+      `sound("~ ~ cp ~ ~ cp ~ ~").gain(1.0).room(0.3)`,
+      `sound("cb*4").gain(0.55).pan(sine.range(0.4, 0.6).slow(2))`,
+      `sound("hh*8").gain("0.4 0.25 0.5 0.25".fast(2))`,
+      `note("<c2 c2 f2 c2 g1 c2 bb1 c2>").sound("sawtooth").struct("1 ~ 1 ~ 1 ~ 1 ~").lpf(600).lpq(8).gain(0.95).decay(0.2).sustain(0.4).shape(0.4)`,
+      `note("<[c4,eb4,g4] [f3,ab3,c4] [g3,bb3,d4] [c4,eb4,g4]>*2").sound("square").decay(0.2).sustain(0.2).lpf(2200).delay(0.3).delaytime(0.375).room(0.5).gain(0.4)`
+    ]
+  },
+
+  shoegaze: {
+    name: '👟 슈게이즈',
+    bpm: 95,
+    description: '사운드의 벽 · 리버브 기타',
+    layers: [
+      `sound("bd ~ ~ bd ~ ~ bd ~").gain(1.15).lpf(320)`,
+      `sound("~ sd ~ sd ~ sd ~ sd").gain(0.85).room(0.7)`,
+      `sound("hh*8").gain(0.45).decay(0.1).room(0.6)`,
+      `note("<[a2,c3,e3] [f2,a2,c3] [g2,b2,d3] [e2,g2,b2]>").sound("sawtooth").attack(0.8).release(1.5).lpf(1500).room(0.9).delay(0.5).delaytime(0.375).delayfeedback(0.5).gain(0.55).shape(0.3)`,
+      `note("<a4 c5 e5 d5 c5 e5 a4 g4>*2").sound("sawtooth").attack(0.02).decay(0.5).sustain(0.5).lpf(sine.range(1500, 3500).slow(8)).lpq(6).delay(0.6).delaytime(0.375).delayfeedback(0.6).room(0.9).gain(0.5).shape(0.25)`,
+      `note("<a1 f1 g1 e1>").sound("sine").attack(0.1).decay(0.5).sustain(0.6).gain(0.7).lpf(300)`
+    ]
+  },
+
+  reggaeton: {
+    name: '🌴 레게톤',
+    bpm: 95,
+    description: '뎀보우 · 라틴 어반',
+    layers: [
+      `sound("bd ~ ~ bd ~ ~ bd ~").gain(1.3).shape(0.3)`,
+      `sound("~ ~ sd ~ ~ sd ~ sd").gain(1.0).room(0.25)`,
+      `sound("hh*8").gain("0.45 0.3 0.5 0.3".fast(2))`,
+      `sound("cb*4").gain(0.45)`,
+      `note("<a1 a1 e2 a1 f2 a1 g2 a1>").sound("sine").struct("1 ~ ~ 1 ~ ~ 1 ~").gain(1.25).attack(0.01).decay(0.4).sustain(0.6).lpf(200)`,
+      `note("<[a3,c4,e4] [f3,a3,c4] [g3,b3,d4] [e3,g3,b3]>*2").sound("square").decay(0.25).sustain(0.2).lpf(2200).delay(0.3).delaytime(0.375).room(0.45).gain(0.4)`,
+      `note("<a4 ~ e4 ~ c5 ~ b4 ~>").sound("triangle").decay(0.3).sustain(0.3).lpf(2800).delay(0.35).delaytime(0.375).room(0.5).gain(0.35)`
+    ]
+  },
+
+  bhangra: {
+    name: '🇮🇳 방그라',
+    bpm: 110,
+    description: '돌(dhol) 드럼 · 펀자브 축제',
+    layers: [
+      `sound("bd bd ~ bd ~ bd bd ~").gain(1.3).shape(0.3)`,
+      `sound("~ sd ~ sd ~ sd ~ sd").gain(0.95).room(0.3)`,
+      `sound("hh*16").gain("0.4 0.25 0.45 0.25".fast(2)).degradeBy(0.1)`,
+      `sound("cb*8").gain(0.5)`,
+      `note("<d2 d2 a2 d2 g2 d2 f2 d2>").sound("sine").struct("1 ~ 1 ~ 1 ~ 1 ~").gain(1.15).decay(0.3).sustain(0.5)`,
+      `note("<d4 f4 g4 a4 c5 a4 g4 f4>*2").sound("sawtooth").attack(0.01).decay(0.15).sustain(0.4).lpf(2800).lpq(6).gain(0.55).room(0.4)`,
+      `note("<[d3,f3,a3] [g3,bb3,d4] [a3,c4,e4] [d3,f3,a3]>").sound("square").decay(0.2).sustain(0.3).lpf(2000).delay(0.3).delaytime(0.375).gain(0.4)`
+    ]
   }
 };
 
@@ -1079,12 +1295,13 @@ window.CATEGORIES = {
       'detroit', 'minimaltechno', 'industrial', 'techno',
       'uplifting', 'progressive', 'psytrance', 'trance',
       'hardstyle', 'hardcore', 'gabber',
-      'dubstep', 'dnb', 'liquiddnb', 'jungle', 'breakbeat'
+      'dubstep', 'dnb', 'liquiddnb', 'jungle', 'breakbeat',
+      'ukgarage', 'phonk', 'amapiano', 'hyperpop'
     ]
   },
   chill: {
     label: '🌆 Chill / Downtempo',
-    styles: ['lofi', 'chillhop', 'downtempo', 'triphop', 'balearic', 'ambient', 'newage', 'drone']
+    styles: ['lofi', 'chillhop', 'downtempo', 'triphop', 'balearic', 'ambient', 'newage', 'drone', 'vaporwave', 'futuregarage']
   },
   jazz: {
     label: '🎷 Jazz / Soul / Funk',
@@ -1096,14 +1313,15 @@ window.CATEGORIES = {
   },
   hiphop: {
     label: '🎤 Hip-hop / R&B',
-    styles: ['boombap', 'trap', 'drill', 'cloudrap', 'oldschool', 'westcoast', 'rnb']
+    styles: ['boombap', 'trap', 'drill', 'cloudrap', 'oldschool', 'westcoast', 'rnb', 'jerseyclub']
   },
   rockpop: {
     label: '🎸 Rock / Pop',
     styles: [
       'indierock', 'punkrock', 'grunge', 'metal', 'blues',
       'reggae', 'ska', 'dub',
-      'synthwave', 'citypop', 'synthpop', 'kpop', 'jpop', 'disco_pop'
+      'synthwave', 'citypop', 'synthpop', 'kpop', 'jpop', 'disco_pop',
+      'shoegaze'
     ]
   },
   classical: {
@@ -1112,7 +1330,7 @@ window.CATEGORIES = {
   },
   world: {
     label: '🌏 World / Experimental',
-    styles: ['gugak', 'gamelan', 'raga', 'afrobeat', 'flamenco', 'celtic', 'glitch', 'noise', 'generative', 'microtonal', 'concrete']
+    styles: ['gugak', 'gamelan', 'raga', 'afrobeat', 'flamenco', 'celtic', 'reggaeton', 'bhangra', 'glitch', 'noise', 'generative', 'microtonal', 'concrete']
   }
 };
 
