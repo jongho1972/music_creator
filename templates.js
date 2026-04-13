@@ -1,4 +1,4 @@
-// EDM Creator — 스타일별 Strudel 템플릿 (web 런타임 호환)
+// Music Creator — 장르별 Strudel 템플릿 (web 런타임 호환)
 // 각 템플릿: { name, bpm, description, layers: [pattern string, ...] }
 // layers는 stack()에 들어갈 개별 패턴 식. app.js가 이를 조합해 실행 가능한 코드로 변환.
 
