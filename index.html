@@ -15,26 +15,11 @@
 
 <main>
   <section class="controls">
-    <div class="preset-buttons">
-      <button class="preset" data-style="ibiza">🏝️ 이비자</button>
-      <button class="preset" data-style="techno">🏭 테크노</button>
-      <button class="preset" data-style="dnb">⚡ DnB</button>
-      <button class="preset" data-style="lofi">☕ 로파이</button>
-      <button class="preset" data-style="trap">🔥 트랩</button>
-      <button class="preset" data-style="trance">🌌 트랜스</button>
-      <button class="preset" data-style="ambient">🌊 앰비언트</button>
-      <button class="preset" data-style="synthwave">🌃 신스웨이브80s</button>
-      <button class="preset" data-style="deephouse">🎹 딥하우스</button>
-      <button class="preset" data-style="disco">🎛️ 디스코펑크</button>
-      <button class="preset" data-style="funksoul">🎷 펑크소울</button>
-      <button class="preset" data-style="reggae">🎸 레게</button>
-      <button class="preset" data-style="jazz">🎺 재즈</button>
-      <button class="preset" data-style="hardstyle">🏛️ 하드스타일</button>
-      <button class="preset" data-style="psytrance">🌀 사이키트랜스</button>
-      <button class="preset" data-style="breakbeat">🥁 브레이크비트</button>
-      <button class="preset" data-style="neoclassic">🎻 네오클래식</button>
-      <button class="preset" data-style="glitch">🤖 글리치/IDM</button>
-      <button class="preset" data-style="kpop">🎶 K-pop</button>
+    <div class="category-tabs" id="categoryTabs"></div>
+    <div class="genre-row">
+      <label class="genre-label" for="genreSelect">🎵 장르</label>
+      <select id="genreSelect" class="genre-select"></select>
+      <button id="randomGenreBtn" class="genre-random">🎲 랜덤</button>
     </div>
 
     <div class="actions">
@@ -110,7 +95,7 @@
 <footer>
   <p>Powered by <a href="https://strudel.cc/" target="_blank">Strudel</a> — 라이브 코딩 음악 플랫폼</p>
   <p>개발: 이종호 (<a href="mailto:jongho1972@gmail.com">jongho1972@gmail.com</a>)</p>
-  <p id="deploy-time">최종 배포: 2026년 04월 12일</p>
+  <p id="deploy-time">최종 배포: 2026년 04월 13일</p>
 </footer>
 
 <script src="templates.js"></script>

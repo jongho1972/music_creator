@@ -134,9 +134,17 @@ function generate(style, { newSeed = true } = {}) {
   document.getElementById('nowPlayingName').textContent = result.name;
   document.getElementById('nowPlayingBpm').textContent = `${result.bpm} BPM`;
 
-  document.querySelectorAll('.preset').forEach(btn => {
-    btn.classList.toggle('selected', btn.dataset.style === style);
-  });
+  // 탭 + 드롭다운 선택 상태 동기화
+  const cat = findCategoryOf(style);
+  if (cat) {
+    document.querySelectorAll('.cat-tab').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.cat === cat);
+    });
+    if (document.getElementById('genreSelect').dataset.cat !== cat) {
+      populateGenreSelect(cat);
+    }
+    document.getElementById('genreSelect').value = style;
+  }
 
   // 재생 중이면 새 코드로 즉시 재평가 (라이브 코딩 느낌)
   if (state.playing) {
@@ -144,9 +152,54 @@ function generate(style, { newSeed = true } = {}) {
   }
 }
 
-// ─── 이벤트 바인딩 ────────────────────────────
-document.querySelectorAll('.preset').forEach(btn => {
-  btn.addEventListener('click', () => generate(btn.dataset.style));
+// ─── 카테고리 탭 + 장르 드롭다운 ──────────────
+function findCategoryOf(styleKey) {
+  for (const [catKey, cat] of Object.entries(window.CATEGORIES)) {
+    if (cat.styles.includes(styleKey)) return catKey;
+  }
+  return null;
+}
+
+function populateGenreSelect(catKey) {
+  const sel = document.getElementById('genreSelect');
+  const cat = window.CATEGORIES[catKey];
+  sel.innerHTML = '';
+  sel.dataset.cat = catKey;
+  for (const styleKey of cat.styles) {
+    const t = window.TEMPLATES[styleKey];
+    if (!t) continue;
+    const opt = document.createElement('option');
+    opt.value = styleKey;
+    opt.textContent = t.name;
+    sel.appendChild(opt);
+  }
+}
+
+function buildCategoryTabs() {
+  const bar = document.getElementById('categoryTabs');
+  bar.innerHTML = '';
+  for (const [catKey, cat] of Object.entries(window.CATEGORIES)) {
+    const btn = document.createElement('button');
+    btn.className = 'cat-tab';
+    btn.dataset.cat = catKey;
+    btn.textContent = cat.label;
+    btn.addEventListener('click', () => {
+      populateGenreSelect(catKey);
+      const firstStyle = window.CATEGORIES[catKey].styles[0];
+      if (firstStyle) generate(firstStyle);
+    });
+    bar.appendChild(btn);
+  }
+}
+
+document.getElementById('genreSelect').addEventListener('change', (e) => {
+  if (e.target.value) generate(e.target.value);
+});
+
+document.getElementById('randomGenreBtn').addEventListener('click', () => {
+  const all = Object.keys(window.TEMPLATES);
+  const pick = all[Math.floor(Math.random() * all.length)];
+  generate(pick);
 });
 
 document.getElementById('playBtn').addEventListener('click', playCurrent);
@@ -244,6 +297,8 @@ document.getElementById('fxResetBtn').addEventListener('click', () => {
   generate(state.currentStyle, { newSeed: false });
 });
 
+buildCategoryTabs();
+populateGenreSelect('edm');
 populateMixSelect();
 setPlayingState(false);
 generate('ibiza');
