@@ -29,20 +29,25 @@
     <div id="aiStatus" class="ai-status"></div>
   </section>
 
-  <section class="controls">
+  <button id="presetToggle" class="preset-toggle" aria-expanded="false">
+    <span id="presetToggleLabel">📂 프리셋에서 선택</span>
+    <span class="preset-toggle-caret">▾</span>
+  </button>
+
+  <section class="controls" id="presetPanel" hidden>
     <div class="category-tabs" id="categoryTabs"></div>
     <div class="genre-row">
       <label class="genre-label" for="genreSelect">🎵 장르</label>
       <select id="genreSelect" class="genre-select"></select>
       <button id="randomGenreBtn" class="genre-random">🎲 랜덤</button>
     </div>
-
-    <div class="actions">
-      <button id="playBtn" class="play-btn">▶ 재생</button>
-      <button id="stopBtn" class="stop-btn">⏹ 정지</button>
-      <span id="status" class="status">로딩 중...</span>
-    </div>
   </section>
+
+  <div class="actions">
+    <button id="playBtn" class="play-btn">▶ 재생</button>
+    <button id="stopBtn" class="stop-btn">⏹ 정지</button>
+    <span id="status" class="status">로딩 중...</span>
+  </div>
 
   <section class="dj-console">
     <div class="dj-header">🎛️ DJ 컨트롤 <span class="dj-hint">재생 중에 조작하면 라이브로 반영됩니다</span></div>

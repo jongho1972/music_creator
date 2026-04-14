@@ -195,6 +195,8 @@ function generate(style, { newSeed = true } = {}) {
     document.getElementById('genreSelect').value = style;
   }
 
+  updatePresetToggleLabel();
+
   // 재생 중이면 새 코드로 즉시 재평가 (라이브 코딩 느낌)
   if (state.playing) {
     try { window.evaluate(result.code); } catch (e) { console.error(e); }
@@ -437,6 +439,8 @@ async function generateFromPrompt() {
 
     statusEl.textContent = '✓ 생성 완료 — ▶ 재생 버튼을 누르세요';
     statusEl.className = 'ai-status ok';
+    const presetLabel = document.getElementById('presetToggleLabel');
+    if (presetLabel) presetLabel.textContent = '📂 프리셋에서 선택';
 
     if (state.playing) {
       try { window.evaluate(data.code); } catch (e) { console.error(e); }
@@ -449,6 +453,21 @@ async function generateFromPrompt() {
     btn.disabled = false;
   }
 }
+
+// ─── 프리셋 토글 ─────────────────────────
+function updatePresetToggleLabel() {
+  const label = document.getElementById('presetToggleLabel');
+  if (!label) return;
+  const t = window.TEMPLATES[state.currentStyle];
+  label.textContent = t ? `📂 프리셋: ${t.name}` : '📂 프리셋에서 선택';
+}
+document.getElementById('presetToggle').addEventListener('click', () => {
+  const btn = document.getElementById('presetToggle');
+  const panel = document.getElementById('presetPanel');
+  const expanded = btn.getAttribute('aria-expanded') === 'true';
+  btn.setAttribute('aria-expanded', String(!expanded));
+  panel.hidden = expanded;
+});
 
 document.getElementById('aiGenBtn').addEventListener('click', generateFromPrompt);
 document.getElementById('aiPrompt').addEventListener('keydown', (e) => {
