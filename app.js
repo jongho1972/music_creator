@@ -10,7 +10,6 @@ const state = {
   playing: false,
   seed: 0,
   aiPrompt: null,    // AI로 생성한 경우 원본 프롬프트 저장 (변주 시 재사용)
-  aiBaseCode: null,  // AI가 반환한 원본 코드 (DJ FX는 이 위에 재적용)
   djFx: {
     lpf: 20000,      // 로패스 필터 (20000 = full open)
     hpf: 0,          // 하이패스 필터 (0 = off)
@@ -83,16 +82,20 @@ function renderCode(styleKey, mixStyleKey, volume, seed, djFx) {
   const t = window.TEMPLATES[styleKey];
   if (!t) return '';
 
+  // AI 템플릿은 Claude가 의도적으로 배치한 순서를 유지
+  const effSeed = styleKey.startsWith('__') ? 0 : seed;
+
   let bpm = t.bpm;
   let name = t.name;
-  let aLayers = applyVariation(t.layers, seed, t.variants);
+  let aLayers = applyVariation(t.layers, effSeed, t.variants);
   let bLayers = null;
 
   if (mixStyleKey && mixStyleKey !== styleKey && window.TEMPLATES[mixStyleKey]) {
     const t2 = window.TEMPLATES[mixStyleKey];
     bpm = Math.round((t.bpm + t2.bpm) / 2);
     name = `${t.name} × ${t2.name}`;
-    bLayers = applyVariation(t2.layers, seed, t2.variants);
+    const effSeed2 = mixStyleKey.startsWith('__') ? 0 : seed;
+    bLayers = applyVariation(t2.layers, effSeed2, t2.variants);
   }
 
   // 뮤트 필터
@@ -144,11 +147,60 @@ function buildFxChain(volume, djFx) {
   return fx;
 }
 
-// AI가 반환한 원본 코드에 현재 DJ FX 체인을 재적용
-// - 마지막 `.gain(...)` 를 제거한 뒤 새 FX 체인으로 교체
-function renderAiCode(baseCode, volume, djFx) {
-  const stripped = baseCode.trimEnd().replace(/\.gain\([^)]*\)\s*$/, '');
-  return stripped + buildFxChain(volume, djFx);
+// AI 코드를 파싱해 { name, bpm, layers } 템플릿으로 변환
+// 변환 후 window.TEMPLATES.__ai__ 에 저장하면 기존 renderCode 파이프라인이
+// 그대로 적용되어 뮤트/사이드체인/믹스/변주/DJ FX가 모두 작동한다.
+function splitTopLevelCommas(s) {
+  const out = [];
+  let depth = 0, start = 0, inStr = null;
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i];
+    if (inStr) {
+      if (c === '\\') { i++; continue; }
+      if (c === inStr) inStr = null;
+      continue;
+    }
+    if (c === '"' || c === "'" || c === '`') { inStr = c; continue; }
+    if (c === '(' || c === '[' || c === '{') depth++;
+    else if (c === ')' || c === ']' || c === '}') depth--;
+    else if (c === ',' && depth === 0) {
+      const part = s.slice(start, i).trim();
+      if (part) out.push(part);
+      start = i + 1;
+    }
+  }
+  const last = s.slice(start).trim();
+  if (last) out.push(last);
+  return out;
+}
+
+function parseAiCode(code) {
+  const firstLine = (code.split('\n')[0] || '').trim();
+  const m = firstLine.match(/\/\/\s*(.+?)\s*·\s*(\d+)\s*BPM/);
+  const name = m ? m[1] : '🤖 AI 생성';
+  const bpm = m ? parseInt(m[2], 10) : 120;
+
+  const stackIdx = code.indexOf('stack(');
+  if (stackIdx < 0) return null;
+  let depth = 0, inStr = null;
+  const contentStart = stackIdx + 6;
+  let contentEnd = -1;
+  for (let i = contentStart - 1; i < code.length; i++) {
+    const c = code[i];
+    if (inStr) {
+      if (c === '\\') { i++; continue; }
+      if (c === inStr) inStr = null;
+      continue;
+    }
+    if (c === '"' || c === "'" || c === '`') { inStr = c; continue; }
+    if (c === '(') depth++;
+    else if (c === ')') { depth--; if (depth === 0) { contentEnd = i; break; } }
+  }
+  if (contentEnd < 0) return null;
+  const body = code.slice(contentStart, contentEnd);
+  const layers = splitTopLevelCommas(body);
+  if (layers.length === 0) return null;
+  return { name, bpm, layers };
 }
 
 // ─── 재생/정지 ────────────────────────────────
@@ -184,18 +236,8 @@ function stopCurrent() {
 
 // ─── 생성 ─────────────────────────────────────
 function generate(style, { newSeed = true, preserveAi = false } = {}) {
-  // AI 모드: 원본 AI 코드에 현재 DJ FX를 덧붙여 재렌더
-  if (preserveAi && state.aiPrompt && state.aiBaseCode) {
-    const code = renderAiCode(state.aiBaseCode, state.volume, state.djFx);
-    document.getElementById('codeEditor').value = code;
-    if (state.playing) {
-      try { window.evaluate(code); } catch (e) { console.error(e); }
-    }
-    return;
-  }
-
   state.currentStyle = style;
-  if (!preserveAi) { state.aiPrompt = null; state.aiBaseCode = null; }
+  if (!preserveAi) state.aiPrompt = null;
   if (newSeed) state.seed = Math.floor(Math.random() * 1000000);
 
   const result = renderCode(style, state.mixStyle, state.volume, state.seed, state.djFx);
@@ -321,6 +363,7 @@ function populateMixSelect() {
   const sel = document.getElementById('mixSelect');
   sel.innerHTML = '<option value="">(믹스 없음)</option>';
   for (const [key, t] of Object.entries(window.TEMPLATES)) {
+    if (key.startsWith('__')) continue;  // 내부 가상 템플릿 제외
     const opt = document.createElement('option');
     opt.value = key;
     opt.textContent = t.name;
@@ -459,27 +502,19 @@ async function generateFromPrompt({ reusePrompt = false } = {}) {
     if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
     if (!data.code) throw new Error('빈 응답');
 
-    state.aiBaseCode = data.code;
-    if (!reusePrompt) state.aiPrompt = prompt;
-    const renderedCode = renderAiCode(data.code, state.volume, state.djFx);
-    document.getElementById('codeEditor').value = renderedCode;
-    const firstLine = data.code.split('\n')[0] || '';
-    const nameMatch = firstLine.match(/\/\/\s*(.+?)\s*·\s*(\d+)\s*BPM/);
-    if (nameMatch) {
-      document.getElementById('nowPlayingName').textContent = nameMatch[1];
-      document.getElementById('nowPlayingBpm').textContent = `${nameMatch[2]} BPM`;
-    } else {
-      document.getElementById('nowPlayingName').textContent = 'AI 생성';
-      document.getElementById('nowPlayingBpm').textContent = '- BPM';
-    }
+    const parsed = parseAiCode(data.code);
+    if (!parsed) throw new Error('응답 파싱 실패 — Strudel 포맷이 아닙니다');
+
+    // AI 결과를 가상 템플릿으로 주입, 기존 renderCode 파이프라인이 처리
+    window.TEMPLATES.__ai__ = parsed;
+    state.aiPrompt = reusePrompt ? state.aiPrompt : prompt;
+    state.currentStyle = '__ai__';
+
+    // 현재 DJ FX 상태로 렌더 (generate → renderCode 경유)
+    generate('__ai__', { newSeed: false, preserveAi: true });
 
     statusEl.textContent = reusePrompt ? '✓ 변주 생성 완료' : '✓ 생성 완료 — ▶ 재생 버튼을 누르세요';
     statusEl.className = 'ai-status ok';
-    updatePresetCurrent('🤖 AI 생성 코드 재생 중 (프리셋을 고르면 대체됩니다)');
-
-    if (state.playing) {
-      try { window.evaluate(renderedCode); } catch (e) { console.error(e); }
-    }
   } catch (err) {
     console.error(err);
     statusEl.textContent = '✗ 생성 실패: ' + err.message;
@@ -495,7 +530,8 @@ function updatePresetCurrent(text) {
   if (!el) return;
   if (text) { el.textContent = text; return; }
   const t = window.TEMPLATES[state.currentStyle];
-  el.textContent = t ? t.name : '';
+  if (!t) { el.textContent = ''; return; }
+  el.textContent = state.currentStyle === '__ai__' ? `🤖 AI: ${t.name}` : t.name;
 }
 
 document.getElementById('aiGenBtn').addEventListener('click', generateFromPrompt);
