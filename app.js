@@ -9,6 +9,7 @@ const state = {
   volume: 0.8,
   playing: false,
   seed: 0,
+  aiPrompt: null,  // AI로 생성한 경우 원본 프롬프트 저장 (변주 시 재사용)
   djFx: {
     lpf: 20000,      // 로패스 필터 (20000 = full open)
     hpf: 0,          // 하이패스 필터 (0 = off)
@@ -172,8 +173,11 @@ function stopCurrent() {
 }
 
 // ─── 생성 ─────────────────────────────────────
-function generate(style, { newSeed = true } = {}) {
+function generate(style, { newSeed = true, preserveAi = false } = {}) {
+  // preserveAi=true: DJ FX 슬라이더 등이 호출 — AI 코드를 지키기 위해 no-op
+  if (preserveAi && state.aiPrompt) return;
   state.currentStyle = style;
+  if (!preserveAi) state.aiPrompt = null;
   if (newSeed) state.seed = Math.floor(Math.random() * 1000000);
 
   const result = renderCode(style, state.mixStyle, state.volume, state.seed, state.djFx);
@@ -267,19 +271,23 @@ document.getElementById('copyBtn').addEventListener('click', async () => {
 });
 
 document.getElementById('regenBtn').addEventListener('click', () => {
-  generate(state.currentStyle, { newSeed: true });
+  if (state.aiPrompt) {
+    generateFromPrompt({ reusePrompt: true });
+  } else {
+    generate(state.currentStyle, { newSeed: true });
+  }
 });
 
 document.getElementById('volumeSlider').addEventListener('input', (e) => {
   state.volume = parseFloat(e.target.value);
   document.getElementById('volumeValue').textContent = Math.round(state.volume * 100) + '%';
   // 재생 중이면 볼륨 변경만 반영해 재평가
-  generate(state.currentStyle, { newSeed: false });
+  generate(state.currentStyle, { newSeed: false, preserveAi: true });
 });
 
 document.getElementById('mixSelect').addEventListener('change', (e) => {
   state.mixStyle = e.target.value || null;
-  generate(state.currentStyle, { newSeed: false });
+  generate(state.currentStyle, { newSeed: false, preserveAi: true });
 });
 
 // 스페이스바 재생/정지
@@ -309,7 +317,7 @@ function bindDjSlider(id, key, formatter) {
   el.addEventListener('input', () => {
     state.djFx[key] = parseFloat(el.value);
     if (label) label.textContent = formatter(state.djFx[key]);
-    generate(state.currentStyle, { newSeed: false });
+    generate(state.currentStyle, { newSeed: false, preserveAi: true });
   });
 }
 
@@ -329,19 +337,19 @@ bindDjSlider('xfSlider', 'crossfade', v => {
 document.getElementById('drumMuteBtn').addEventListener('click', () => {
   state.djFx.drumMute = !state.djFx.drumMute;
   document.getElementById('drumMuteBtn').classList.toggle('muted', state.djFx.drumMute);
-  generate(state.currentStyle, { newSeed: false });
+  generate(state.currentStyle, { newSeed: false, preserveAi: true });
 });
 
 document.getElementById('melMuteBtn').addEventListener('click', () => {
   state.djFx.melMute = !state.djFx.melMute;
   document.getElementById('melMuteBtn').classList.toggle('muted', state.djFx.melMute);
-  generate(state.currentStyle, { newSeed: false });
+  generate(state.currentStyle, { newSeed: false, preserveAi: true });
 });
 
 document.getElementById('sidechainBtn').addEventListener('click', () => {
   state.djFx.sidechain = !state.djFx.sidechain;
   document.getElementById('sidechainBtn').classList.toggle('active', state.djFx.sidechain);
-  generate(state.currentStyle, { newSeed: false });
+  generate(state.currentStyle, { newSeed: false, preserveAi: true });
 });
 
 // FX 슬라이더 + 라벨 + 토글 UI 상태를 djFx로부터 복원
@@ -380,7 +388,7 @@ function flashActive(btn) {
 document.getElementById('buildBtn').addEventListener('click', (e) => {
   state.djFx = { ...DJ_FX_BUILDUP };
   syncDjUI();
-  generate(state.currentStyle, { newSeed: false });
+  generate(state.currentStyle, { newSeed: false, preserveAi: true });
   flashActive(e.currentTarget);
 });
 
@@ -388,7 +396,7 @@ document.getElementById('dropBtn').addEventListener('click', (e) => {
   // DROP: 리셋 + 일순간 크러시/킥 강조
   state.djFx = { ...DJ_FX_DEFAULT, shape: 0.25 };
   syncDjUI();
-  generate(state.currentStyle, { newSeed: true });
+  generate(state.currentStyle, { newSeed: true, preserveAi: true });
   flashActive(e.currentTarget);
 });
 
@@ -397,19 +405,26 @@ document.getElementById('fxResetBtn').addEventListener('click', () => {
   document.getElementById('mixSelect').value = '';
   state.djFx = { ...DJ_FX_DEFAULT };
   syncDjUI();
-  generate(state.currentStyle, { newSeed: false });
+  generate(state.currentStyle, { newSeed: false, preserveAi: true });
 });
 
 // ─── AI 자연어 → 코드 생성 ─────────────────
-async function generateFromPrompt() {
+async function generateFromPrompt({ reusePrompt = false } = {}) {
   const input = document.getElementById('aiPrompt');
   const btn = document.getElementById('aiGenBtn');
   const statusEl = document.getElementById('aiStatus');
-  const prompt = input.value.trim();
-  if (!prompt) {
-    statusEl.textContent = '설명을 입력해 주세요.';
-    statusEl.className = 'ai-status err';
-    return;
+
+  let prompt;
+  if (reusePrompt && state.aiPrompt) {
+    // 변주: 저장된 프롬프트에 변주 힌트 덧붙여 Claude가 다른 결과를 내도록 유도
+    prompt = `${state.aiPrompt}\n\n(앞서 생성한 것과 다른 멜로디·리듬 변주로 만들어주세요)`;
+  } else {
+    prompt = input.value.trim();
+    if (!prompt) {
+      statusEl.textContent = '설명을 입력해 주세요.';
+      statusEl.className = 'ai-status err';
+      return;
+    }
   }
 
   btn.disabled = true;
@@ -437,10 +452,12 @@ async function generateFromPrompt() {
       document.getElementById('nowPlayingBpm').textContent = '- BPM';
     }
 
-    statusEl.textContent = '✓ 생성 완료 — ▶ 재생 버튼을 누르세요';
+    statusEl.textContent = reusePrompt ? '✓ 변주 생성 완료' : '✓ 생성 완료 — ▶ 재생 버튼을 누르세요';
     statusEl.className = 'ai-status ok';
+    // 원본 프롬프트만 저장 (변주 힌트는 제외)
+    if (!reusePrompt) state.aiPrompt = prompt;
     const presetLabel = document.getElementById('presetToggleLabel');
-    if (presetLabel) presetLabel.textContent = '📂 프리셋에서 선택';
+    if (presetLabel) presetLabel.textContent = '🤖 AI 생성 (🎲 변주로 다른 버전)';
 
     if (state.playing) {
       try { window.evaluate(data.code); } catch (e) { console.error(e); }
