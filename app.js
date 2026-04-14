@@ -9,7 +9,8 @@ const state = {
   volume: 0.8,
   playing: false,
   seed: 0,
-  aiPrompt: null,  // AI로 생성한 경우 원본 프롬프트 저장 (변주 시 재사용)
+  aiPrompt: null,    // AI로 생성한 경우 원본 프롬프트 저장 (변주 시 재사용)
+  aiBaseCode: null,  // AI가 반환한 원본 코드 (DJ FX는 이 위에 재적용)
   djFx: {
     lpf: 20000,      // 로패스 필터 (20000 = full open)
     hpf: 0,          // 하이패스 필터 (0 = off)
@@ -127,7 +128,11 @@ function renderCode(styleKey, mixStyleKey, volume, seed, djFx) {
   if (combined.length === 0) combined = ['silence'];
   const body = combined.map(l => '  ' + l).join(',\n');
 
-  // 스택 FX 체인
+  const code = `// ${name} · ${bpm} BPM\ncps(${(bpm / 60 / 4).toFixed(4)})\n\nstack(\n${body}\n)${buildFxChain(volume, djFx)}`;
+  return { code, bpm, name };
+}
+
+function buildFxChain(volume, djFx) {
   let fx = `.gain(${volume.toFixed(2)})`;
   if (Math.abs(djFx.tempoMul - 1) > 0.001) fx += `.fast(${djFx.tempoMul.toFixed(2)})`;
   if (djFx.lpf < 19999) fx += `.lpf(${Math.round(djFx.lpf)})`;
@@ -136,9 +141,14 @@ function renderCode(styleKey, mixStyleKey, volume, seed, djFx) {
   if (djFx.delay > 0) fx += `.delay(${djFx.delay.toFixed(2)}).delaytime(0.375).delayfeedback(0.5)`;
   if (djFx.shape > 0) fx += `.shape(${djFx.shape.toFixed(2)})`;
   if (djFx.swing > 0.001) fx += `.swingBy(${djFx.swing.toFixed(2)},4)`;
+  return fx;
+}
 
-  const code = `// ${name} · ${bpm} BPM\ncps(${(bpm / 60 / 4).toFixed(4)})\n\nstack(\n${body}\n)${fx}`;
-  return { code, bpm, name };
+// AI가 반환한 원본 코드에 현재 DJ FX 체인을 재적용
+// - 마지막 `.gain(...)` 를 제거한 뒤 새 FX 체인으로 교체
+function renderAiCode(baseCode, volume, djFx) {
+  const stripped = baseCode.trimEnd().replace(/\.gain\([^)]*\)\s*$/, '');
+  return stripped + buildFxChain(volume, djFx);
 }
 
 // ─── 재생/정지 ────────────────────────────────
@@ -174,10 +184,18 @@ function stopCurrent() {
 
 // ─── 생성 ─────────────────────────────────────
 function generate(style, { newSeed = true, preserveAi = false } = {}) {
-  // preserveAi=true: DJ FX 슬라이더 등이 호출 — AI 코드를 지키기 위해 no-op
-  if (preserveAi && state.aiPrompt) return;
+  // AI 모드: 원본 AI 코드에 현재 DJ FX를 덧붙여 재렌더
+  if (preserveAi && state.aiPrompt && state.aiBaseCode) {
+    const code = renderAiCode(state.aiBaseCode, state.volume, state.djFx);
+    document.getElementById('codeEditor').value = code;
+    if (state.playing) {
+      try { window.evaluate(code); } catch (e) { console.error(e); }
+    }
+    return;
+  }
+
   state.currentStyle = style;
-  if (!preserveAi) state.aiPrompt = null;
+  if (!preserveAi) { state.aiPrompt = null; state.aiBaseCode = null; }
   if (newSeed) state.seed = Math.floor(Math.random() * 1000000);
 
   const result = renderCode(style, state.mixStyle, state.volume, state.seed, state.djFx);
@@ -441,7 +459,10 @@ async function generateFromPrompt({ reusePrompt = false } = {}) {
     if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
     if (!data.code) throw new Error('빈 응답');
 
-    document.getElementById('codeEditor').value = data.code;
+    state.aiBaseCode = data.code;
+    if (!reusePrompt) state.aiPrompt = prompt;
+    const renderedCode = renderAiCode(data.code, state.volume, state.djFx);
+    document.getElementById('codeEditor').value = renderedCode;
     const firstLine = data.code.split('\n')[0] || '';
     const nameMatch = firstLine.match(/\/\/\s*(.+?)\s*·\s*(\d+)\s*BPM/);
     if (nameMatch) {
@@ -454,12 +475,10 @@ async function generateFromPrompt({ reusePrompt = false } = {}) {
 
     statusEl.textContent = reusePrompt ? '✓ 변주 생성 완료' : '✓ 생성 완료 — ▶ 재생 버튼을 누르세요';
     statusEl.className = 'ai-status ok';
-    // 원본 프롬프트만 저장 (변주 힌트는 제외)
-    if (!reusePrompt) state.aiPrompt = prompt;
     updatePresetCurrent('🤖 AI 생성 코드 재생 중 (프리셋을 고르면 대체됩니다)');
 
     if (state.playing) {
-      try { window.evaluate(data.code); } catch (e) { console.error(e); }
+      try { window.evaluate(renderedCode); } catch (e) { console.error(e); }
     }
   } catch (err) {
     console.error(err);
