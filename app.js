@@ -199,7 +199,7 @@ function generate(style, { newSeed = true, preserveAi = false } = {}) {
     document.getElementById('genreSelect').value = style;
   }
 
-  updatePresetToggleLabel();
+  updatePresetCurrent();
 
   // 재생 중이면 새 코드로 즉시 재평가 (라이브 코딩 느낌)
   if (state.playing) {
@@ -456,8 +456,7 @@ async function generateFromPrompt({ reusePrompt = false } = {}) {
     statusEl.className = 'ai-status ok';
     // 원본 프롬프트만 저장 (변주 힌트는 제외)
     if (!reusePrompt) state.aiPrompt = prompt;
-    const presetLabel = document.getElementById('presetToggleLabel');
-    if (presetLabel) presetLabel.textContent = '🤖 AI 생성 (🎲 변주로 다른 버전)';
+    updatePresetCurrent('🤖 AI 생성 코드 재생 중 (프리셋을 고르면 대체됩니다)');
 
     if (state.playing) {
       try { window.evaluate(data.code); } catch (e) { console.error(e); }
@@ -471,20 +470,14 @@ async function generateFromPrompt({ reusePrompt = false } = {}) {
   }
 }
 
-// ─── 프리셋 토글 ─────────────────────────
-function updatePresetToggleLabel() {
-  const label = document.getElementById('presetToggleLabel');
-  if (!label) return;
+// ─── 현재 프리셋 표시 ─────────────────────
+function updatePresetCurrent(text) {
+  const el = document.getElementById('presetCurrent');
+  if (!el) return;
+  if (text) { el.textContent = text; return; }
   const t = window.TEMPLATES[state.currentStyle];
-  label.textContent = t ? `📂 프리셋: ${t.name}` : '📂 프리셋에서 선택';
+  el.textContent = t ? t.name : '';
 }
-document.getElementById('presetToggle').addEventListener('click', () => {
-  const btn = document.getElementById('presetToggle');
-  const panel = document.getElementById('presetPanel');
-  const expanded = btn.getAttribute('aria-expanded') === 'true';
-  btn.setAttribute('aria-expanded', String(!expanded));
-  panel.hidden = expanded;
-});
 
 document.getElementById('aiGenBtn').addEventListener('click', generateFromPrompt);
 document.getElementById('aiPrompt').addEventListener('keydown', (e) => {

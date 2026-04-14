@@ -29,12 +29,9 @@
     <div id="aiStatus" class="ai-status"></div>
   </section>
 
-  <button id="presetToggle" class="preset-toggle" aria-expanded="false">
-    <span id="presetToggleLabel">📂 프리셋에서 선택</span>
-    <span class="preset-toggle-caret">▾</span>
-  </button>
-
-  <section class="controls" id="presetPanel" hidden>
+  <section class="ai-gen preset-gen">
+    <div class="ai-header">📂 프리셋 <span class="ai-hint">7개 카테고리 · 81개 장르 중 골라 바로 재생합니다</span></div>
+    <div id="presetCurrent" class="preset-current">🏝️ 이비자 하우스</div>
     <div class="category-tabs" id="categoryTabs"></div>
     <div class="genre-row">
       <label class="genre-label" for="genreSelect">🎵 장르</label>
