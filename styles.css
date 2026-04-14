@@ -573,3 +573,68 @@ footer a {
   .category-tabs { grid-template-columns: repeat(2, 1fr); }
   h1 { font-size: 1.6rem; }
 }
+
+/* ─── AI 생성 섹션 ─────────────────────────── */
+.ai-gen {
+  background: linear-gradient(135deg, #1f1530 0%, #1a1a2e 100%);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+}
+.ai-header {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--text);
+}
+.ai-hint {
+  font-weight: 400;
+  color: var(--muted);
+  font-size: 0.78rem;
+  margin-left: 6px;
+}
+.ai-row {
+  display: flex;
+  gap: 10px;
+}
+.ai-input {
+  flex: 1;
+  min-width: 0;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+.ai-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.ai-gen-btn {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #0f0f1a;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.ai-gen-btn:hover { opacity: 0.9; }
+.ai-gen-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.ai-status {
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: var(--muted);
+  min-height: 1.2em;
+}
+.ai-status.err { color: #ff6b6b; }
+.ai-status.ok { color: #6bff9d; }
+
+@media (max-width: 540px) {
+  .ai-row { flex-direction: column; }
+}

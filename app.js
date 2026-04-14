@@ -398,6 +398,63 @@ document.getElementById('fxResetBtn').addEventListener('click', () => {
   generate(state.currentStyle, { newSeed: false });
 });
 
+// ─── AI 자연어 → 코드 생성 ─────────────────
+async function generateFromPrompt() {
+  const input = document.getElementById('aiPrompt');
+  const btn = document.getElementById('aiGenBtn');
+  const statusEl = document.getElementById('aiStatus');
+  const prompt = input.value.trim();
+  if (!prompt) {
+    statusEl.textContent = '설명을 입력해 주세요.';
+    statusEl.className = 'ai-status err';
+    return;
+  }
+
+  btn.disabled = true;
+  statusEl.textContent = '⏳ AI가 코드를 작성 중입니다...';
+  statusEl.className = 'ai-status';
+
+  try {
+    const res = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+    if (!data.code) throw new Error('빈 응답');
+
+    document.getElementById('codeEditor').value = data.code;
+    const firstLine = data.code.split('\n')[0] || '';
+    const nameMatch = firstLine.match(/\/\/\s*(.+?)\s*·\s*(\d+)\s*BPM/);
+    if (nameMatch) {
+      document.getElementById('nowPlayingName').textContent = nameMatch[1];
+      document.getElementById('nowPlayingBpm').textContent = `${nameMatch[2]} BPM`;
+    } else {
+      document.getElementById('nowPlayingName').textContent = 'AI 생성';
+      document.getElementById('nowPlayingBpm').textContent = '- BPM';
+    }
+
+    statusEl.textContent = '✓ 생성 완료 — ▶ 재생 버튼을 누르세요';
+    statusEl.className = 'ai-status ok';
+
+    if (state.playing) {
+      try { window.evaluate(data.code); } catch (e) { console.error(e); }
+    }
+  } catch (err) {
+    console.error(err);
+    statusEl.textContent = '✗ 생성 실패: ' + err.message;
+    statusEl.className = 'ai-status err';
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+document.getElementById('aiGenBtn').addEventListener('click', generateFromPrompt);
+document.getElementById('aiPrompt').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') { e.preventDefault(); generateFromPrompt(); }
+});
+
 buildCategoryTabs();
 populateGenreSelect('edm');
 populateMixSelect();

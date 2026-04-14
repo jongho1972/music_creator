@@ -32,15 +32,33 @@ Strudel 라이브 코딩 패턴을 스타일별로 생성해 미리보기/재생
 3. UTF-8 → base64 인코딩 후 `https://strudel.cc/#{encoded}` URL로 iframe 로드
 4. "Strudel에서 재생" 버튼은 새 창으로 열어 play 클릭 가능
 
+## AI 자연어 → 코드 생성
+
+- UI 상단 "🤖 AI 생성" 입력창 → 장르/분위기/BPM/악기 묘사 → `/api/generate` 호출
+- 백엔드: `netlify/functions/generate.js` — Anthropic API(claude-haiku-4-5)로 Strudel 코드 생성
+- 시스템 프롬프트: 출력 포맷·사용 가능 함수·few-shot 예시(이비자, DnB) 포함
+- 환경변수 필수: `ANTHROPIC_API_KEY` (Netlify 대시보드 → Site settings → Environment variables)
+
 ## 로컬 실행
 
+정적 페이지만 확인 (AI 생성 제외):
 ```bash
 cd music_creator
 python3 -m http.server 8000
-# http://localhost:8000 접속
 ```
 
-순수 정적 페이지라 빌드 불필요. Netlify drag & drop으로 배포 가능.
+AI 생성까지 테스트하려면 Netlify CLI 사용:
+```bash
+cd music_creator
+export ANTHROPIC_API_KEY=sk-ant-...
+netlify dev   # http://localhost:8888
+```
+
+## 배포
+
+- Netlify에 GitHub 연동 자동배포 (`strudel-creator.netlify.app`)
+- `netlify.toml`로 functions 디렉토리 지정, `/api/generate` → `/.netlify/functions/generate` 리다이렉트
+- 배포 전 Netlify 대시보드에 `ANTHROPIC_API_KEY` 환경변수 설정 필수
 
 ## 템플릿 추가 방법
 
