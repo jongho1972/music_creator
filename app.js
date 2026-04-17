@@ -143,7 +143,7 @@ function buildFxChain(volume, djFx) {
   if (djFx.reverb > 0) fx += `.room(${djFx.reverb.toFixed(2)})`;
   if (djFx.delay > 0) fx += `.delay(${djFx.delay.toFixed(2)}).delaytime(0.375).delayfeedback(0.5)`;
   if (djFx.shape > 0) fx += `.shape(${djFx.shape.toFixed(2)})`;
-  if (djFx.swing > 0.001) fx += `.swingBy(${djFx.swing.toFixed(2)},4)`;
+  // swing: Strudel 공식 API에 stack 레벨 swing 함수가 없어 비활성화 (UI값은 저장만)
   return fx;
 }
 
@@ -238,10 +238,19 @@ function togglePlay() {
 }
 
 // ─── 생성 ─────────────────────────────────────
-function generate(style, { newSeed = true, preserveAi = false } = {}) {
+function generate(style, { newSeed = true, preserveAi = false, applyPresetFx = false } = {}) {
   state.currentStyle = style;
   if (!preserveAi) state.aiPrompt = null;
   if (newSeed) state.seed = Math.floor(Math.random() * 1000000);
+
+  // 프리셋에 지정된 최적 DJ FX 자동 적용 (장르 전환 시, AI/믹스 제외)
+  if (applyPresetFx && !style.startsWith('__') && !state.mixStyle) {
+    const t = window.TEMPLATES[style];
+    if (t && t.djFx) {
+      state.djFx = { ...DJ_FX_DEFAULT, ...t.djFx };
+      if (typeof syncDjUI === 'function') syncDjUI();
+    }
+  }
 
   const result = renderCode(style, state.mixStyle, state.volume, state.seed, state.djFx);
   if (!result) return;
@@ -276,13 +285,13 @@ function populateGenreSelect() {
 }
 
 document.getElementById('genreSelect').addEventListener('change', (e) => {
-  if (e.target.value) generate(e.target.value);
+  if (e.target.value) generate(e.target.value, { applyPresetFx: true });
 });
 
 document.getElementById('randomGenreBtn').addEventListener('click', () => {
-  const all = Object.keys(window.TEMPLATES);
+  const all = Object.keys(window.TEMPLATES).filter(k => !k.startsWith('__'));
   const pick = all[Math.floor(Math.random() * all.length)];
-  generate(pick);
+  generate(pick, { applyPresetFx: true });
 });
 
 document.getElementById('playToggle').addEventListener('click', togglePlay);
@@ -512,7 +521,7 @@ populateGenreSelect();
 populateMixSelect();
 setPlayingState(false);
 updateCrossfaderState();
-generate('ibiza');
+generate('ibiza', { applyPresetFx: true });
 
 // 배포 일시 표시 (Netlify 빌드 시 deploy-time.txt 생성)
 fetch('deploy-time.txt', { cache: 'no-store' })
