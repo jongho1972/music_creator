@@ -11,15 +11,25 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://strudel-creator.netlify.app">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%BC%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css?v=20260417">
 </head>
 <body>
 <header>
   <h1>🎼 Music Creator</h1>
-  <p class="subtitle">🎧 DJ Top 10 · 15초 완성 Strudel 프리셋 (intro → build → drop → outro)</p>
+  <p class="subtitle">🎧 DJ Top 10 · 15초 완성 Strudel 프리셋</p>
 </header>
 
 <main>
+  <section class="now-playing">
+    <div class="np-info">
+      <div class="np-label">현재 스타일</div>
+      <div class="np-name" id="nowPlayingName">-</div>
+    </div>
+    <div class="np-bpm" id="nowPlayingBpm">- BPM</div>
+    <button id="playToggle" class="play-toggle" aria-label="재생" disabled>▶</button>
+    <span id="status" class="status">로딩 중...</span>
+  </section>
+
   <section class="ai-gen">
     <div class="ai-header">🤖 AI 생성 <span class="ai-hint">자연어로 장르·분위기·BPM·악기를 묘사하면 Strudel 코드를 만들어 줍니다</span></div>
     <div class="ai-row">
@@ -31,27 +41,25 @@
 
   <section class="ai-gen preset-gen">
     <div class="ai-header">📂 프리셋 <span class="ai-hint">DJ 관점 10선 · 각 프리셋이 15초 내 intro→build→drop→outro로 전개됩니다</span></div>
-    <div id="presetCurrent" class="preset-current">🏝️ 이비자 하우스</div>
-    <div class="category-tabs" id="categoryTabs"></div>
     <div class="genre-row">
       <label class="genre-label" for="genreSelect">🎵 장르</label>
       <select id="genreSelect" class="genre-select"></select>
-      <button id="randomGenreBtn" class="genre-random">🎲 랜덤</button>
+      <button id="randomGenreBtn" class="genre-random">🎲 다른 장르</button>
     </div>
   </section>
 
-  <div class="actions">
-    <button id="playBtn" class="play-btn">▶ 재생</button>
-    <button id="stopBtn" class="stop-btn">⏹ 정지</button>
-    <span id="status" class="status">로딩 중...</span>
-  </div>
-
   <section class="dj-console">
     <div class="dj-header">🎛️ DJ 컨트롤 <span class="dj-hint">재생 중에 조작하면 라이브로 반영됩니다</span></div>
+
+    <div class="dj-perform">
+      <button id="buildBtn" class="dj-perform-btn build">⚡ BUILD<span class="perform-sub">필터 + 리버브 쌓기</span></button>
+      <button id="dropBtn" class="dj-perform-btn drop">💥 DROP<span class="perform-sub">풀 임팩트 리셋</span></button>
+    </div>
+
     <div class="dj-mix-row">
       <label class="dj-mix-label">🔀 믹스</label>
       <select id="mixSelect" class="dj-mix-select"></select>
-      <button id="regenBtn" class="dj-regen-btn">🎲 변주</button>
+      <button id="regenBtn" class="dj-regen-btn">🔀 변주</button>
     </div>
     <label class="dj-slider dj-xf">
       <span class="dj-label">🎚️ 크로스페이더 <span class="dj-hint-inline">(믹스 시 A↔B)</span></span>
@@ -101,8 +109,6 @@
       </label>
     </div>
     <div class="dj-toggles">
-      <button id="buildBtn" class="dj-action build">⚡ BUILD</button>
-      <button id="dropBtn" class="dj-action drop">💥 DROP</button>
       <button id="sidechainBtn" class="dj-toggle">💓 사이드체인</button>
       <button id="drumMuteBtn" class="dj-toggle">🥁 드럼 뮤트</button>
       <button id="melMuteBtn" class="dj-toggle">🎹 멜로디 뮤트</button>
@@ -110,27 +116,23 @@
     </div>
   </section>
 
-  <section class="now-playing">
-    <div class="np-label">현재 스타일</div>
-    <div class="np-name" id="nowPlayingName">-</div>
-    <div class="np-bpm" id="nowPlayingBpm">- BPM</div>
-  </section>
-
   <section class="output">
-    <div class="code-panel">
-      <div class="code-header">
-        <h2>생성된 코드 <span class="edit-hint">(편집 후 ▶ 재생으로 실행)</span></h2>
-        <button id="copyBtn" class="copy-btn">📋 코드 복사</button>
+    <details class="code-details">
+      <summary class="code-summary">🔧 고급: 생성된 코드 편집 <span class="edit-hint">(클릭해서 펼치기)</span></summary>
+      <div class="code-panel">
+        <div class="code-header">
+          <h2>편집 후 ▶ 버튼을 누르면 반영됩니다</h2>
+          <button id="copyBtn" class="copy-btn">📋 코드 복사</button>
+        </div>
+        <textarea id="codeEditor" spellcheck="false"></textarea>
       </div>
-      <textarea id="codeEditor" spellcheck="false"></textarea>
-    </div>
+    </details>
   </section>
 </main>
 
 <footer>
   <p>Powered by <a href="https://strudel.cc/" target="_blank">Strudel</a> — 라이브 코딩 음악 플랫폼</p>
   <p>개발: 이종호 (<a href="mailto:jongho1972@gmail.com">jongho1972@gmail.com</a>)</p>
-  <p id="deploy-time">최종 배포: 2026년 04월 13일</p>
 </footer>
 
 <script src="templates.js"></script>
@@ -146,6 +148,7 @@
     window.__strudelReady = true;
     statusEl.textContent = '✓ 준비 완료';
     statusEl.classList.add('ready');
+    document.getElementById('playToggle').disabled = false;
   } catch (err) {
     console.error('Strudel init error:', err);
     statusEl.textContent = '✗ 로드 실패';

@@ -203,15 +203,14 @@ function parseAiCode(code) {
   return { name, bpm, layers };
 }
 
-// ─── 재생/정지 ────────────────────────────────
+// ─── 재생/정지 (단일 토글) ────────────────────
 function setPlayingState(playing) {
   state.playing = playing;
-  const playBtn = document.getElementById('playBtn');
-  const stopBtn = document.getElementById('stopBtn');
-  playBtn.classList.toggle('active', !playing);
-  stopBtn.classList.toggle('active', playing);
-  playBtn.disabled = playing;
-  stopBtn.disabled = !playing;
+  const toggle = document.getElementById('playToggle');
+  if (!toggle) return;
+  toggle.classList.toggle('playing', playing);
+  toggle.textContent = playing ? '⏸' : '▶';
+  toggle.setAttribute('aria-label', playing ? '정지' : '재생');
 }
 
 function playCurrent() {
@@ -234,6 +233,10 @@ function stopCurrent() {
   setPlayingState(false);
 }
 
+function togglePlay() {
+  if (state.playing) stopCurrent(); else playCurrent();
+}
+
 // ─── 생성 ─────────────────────────────────────
 function generate(style, { newSeed = true, preserveAi = false } = {}) {
   state.currentStyle = style;
@@ -247,19 +250,9 @@ function generate(style, { newSeed = true, preserveAi = false } = {}) {
   document.getElementById('nowPlayingName').textContent = result.name;
   document.getElementById('nowPlayingBpm').textContent = `${result.bpm} BPM`;
 
-  // 탭 + 드롭다운 선택 상태 동기화
-  const cat = findCategoryOf(style);
-  if (cat) {
-    document.querySelectorAll('.cat-tab').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.cat === cat);
-    });
-    if (document.getElementById('genreSelect').dataset.cat !== cat) {
-      populateGenreSelect(cat);
-    }
-    document.getElementById('genreSelect').value = style;
-  }
-
-  updatePresetCurrent();
+  // 드롭다운 선택 상태 동기화 (내부 AI 키는 드롭다운에 없으므로 무시)
+  const sel = document.getElementById('genreSelect');
+  if (sel && !style.startsWith('__')) sel.value = style;
 
   // 재생 중이면 새 코드로 즉시 재평가 (라이브 코딩 느낌)
   if (state.playing) {
@@ -267,19 +260,11 @@ function generate(style, { newSeed = true, preserveAi = false } = {}) {
   }
 }
 
-// ─── 카테고리 탭 + 장르 드롭다운 ──────────────
-function findCategoryOf(styleKey) {
-  for (const [catKey, cat] of Object.entries(window.CATEGORIES)) {
-    if (cat.styles.includes(styleKey)) return catKey;
-  }
-  return null;
-}
-
-function populateGenreSelect(catKey) {
+// ─── 장르 드롭다운 ────────────────────────────
+function populateGenreSelect() {
   const sel = document.getElementById('genreSelect');
-  const cat = window.CATEGORIES[catKey];
+  const cat = window.CATEGORIES.djtop10;
   sel.innerHTML = '';
-  sel.dataset.cat = catKey;
   for (const styleKey of cat.styles) {
     const t = window.TEMPLATES[styleKey];
     if (!t) continue;
@@ -287,23 +272,6 @@ function populateGenreSelect(catKey) {
     opt.value = styleKey;
     opt.textContent = t.name;
     sel.appendChild(opt);
-  }
-}
-
-function buildCategoryTabs() {
-  const bar = document.getElementById('categoryTabs');
-  bar.innerHTML = '';
-  for (const [catKey, cat] of Object.entries(window.CATEGORIES)) {
-    const btn = document.createElement('button');
-    btn.className = 'cat-tab';
-    btn.dataset.cat = catKey;
-    btn.textContent = cat.label;
-    btn.addEventListener('click', () => {
-      populateGenreSelect(catKey);
-      const firstStyle = window.CATEGORIES[catKey].styles[0];
-      if (firstStyle) generate(firstStyle);
-    });
-    bar.appendChild(btn);
   }
 }
 
@@ -317,8 +285,7 @@ document.getElementById('randomGenreBtn').addEventListener('click', () => {
   generate(pick);
 });
 
-document.getElementById('playBtn').addEventListener('click', playCurrent);
-document.getElementById('stopBtn').addEventListener('click', stopCurrent);
+document.getElementById('playToggle').addEventListener('click', togglePlay);
 
 document.getElementById('copyBtn').addEventListener('click', async () => {
   const code = document.getElementById('codeEditor').value;
@@ -347,8 +314,19 @@ document.getElementById('volumeSlider').addEventListener('input', (e) => {
 
 document.getElementById('mixSelect').addEventListener('change', (e) => {
   state.mixStyle = e.target.value || null;
+  updateCrossfaderState();
   generate(state.currentStyle, { newSeed: false, preserveAi: true });
 });
+
+// 믹스가 선택되지 않으면 크로스페이더 비활성화 (시각적 비활성 + 슬라이더 disabled)
+function updateCrossfaderState() {
+  const xf = document.getElementById('xfSlider');
+  if (!xf) return;
+  const active = !!state.mixStyle;
+  xf.disabled = !active;
+  const row = xf.closest('.dj-slider');
+  if (row) row.classList.toggle('disabled', !active);
+}
 
 // 스페이스바 재생/정지
 document.addEventListener('keydown', (e) => {
@@ -466,6 +444,7 @@ document.getElementById('fxResetBtn').addEventListener('click', () => {
   document.getElementById('mixSelect').value = '';
   state.djFx = { ...DJ_FX_DEFAULT };
   syncDjUI();
+  updateCrossfaderState();
   generate(state.currentStyle, { newSeed: false, preserveAi: true });
 });
 
@@ -524,23 +503,13 @@ async function generateFromPrompt({ reusePrompt = false } = {}) {
   }
 }
 
-// ─── 현재 프리셋 표시 ─────────────────────
-function updatePresetCurrent(text) {
-  const el = document.getElementById('presetCurrent');
-  if (!el) return;
-  if (text) { el.textContent = text; return; }
-  const t = window.TEMPLATES[state.currentStyle];
-  if (!t) { el.textContent = ''; return; }
-  el.textContent = state.currentStyle === '__ai__' ? `🤖 AI: ${t.name}` : t.name;
-}
-
 document.getElementById('aiGenBtn').addEventListener('click', generateFromPrompt);
 document.getElementById('aiPrompt').addEventListener('keydown', (e) => {
   if (e.key === 'Enter') { e.preventDefault(); generateFromPrompt(); }
 });
 
-buildCategoryTabs();
-populateGenreSelect('djtop10');
+populateGenreSelect();
 populateMixSelect();
 setPlayingState(false);
+updateCrossfaderState();
 generate('ibiza');
