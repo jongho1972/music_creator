@@ -540,7 +540,7 @@ document.getElementById('aiPrompt').addEventListener('keydown', (e) => {
 });
 
 buildCategoryTabs();
-populateGenreSelect('edm');
+populateGenreSelect('djtop10');
 populateMixSelect();
 setPlayingState(false);
 generate('ibiza');

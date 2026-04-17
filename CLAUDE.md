@@ -1,29 +1,41 @@
 # music_creator
 
-Strudel 라이브 코딩 패턴을 스타일별로 생성해 미리보기/재생하는 정적 웹페이지.
+DJ 관점에서 선별한 10개 장르 프리셋을 Strudel 라이브 코딩으로 15초 완성형 재생하는 정적 웹페이지.
 
 ## 구조
 
-- `index.html` — UI (카테고리 탭 + 장르 드롭다운, DJ 콘솔, 코드 편집기)
+- `index.html` — UI (장르 드롭다운, DJ 콘솔, 코드 편집기)
 - `app.js` — 렌더링/재생/변주/DJ FX 로직 + 카테고리 탭·드롭다운 바인딩
-- `templates.js` — `TEMPLATES`(81종) + `CATEGORIES`(7개 분류) + 일부 장르의 `variants` 필드
+- `templates.js` — `TEMPLATES`(10종) + `CATEGORIES`(단일 `djtop10`)
 - `styles.css` — 다크 테마 스타일링
 
-## 카테고리 구조 (7개 / 81개 프리셋)
+## DJ Top 10 프리셋
 
-`templates.js`의 `window.CATEGORIES`에 정의. 탭 클릭 → 해당 카테고리 드롭다운 재구성 + 첫 장르 자동 재생성.
+`templates.js`의 `window.CATEGORIES.djtop10.styles`에 정의된 10개 장르:
 
-- **edm** 🎛️ EDM/Club (23) — 하우스(ibiza, deephouse, techhouse, futurehouse, tribalhouse), 테크노(detroit, techno), 트랜스(uplifting, progressive, psytrance, trance), 하드(hardstyle, hardcore, gabber), 베이스(dubstep, dnb, liquiddnb, jungle, breakbeat), 신규(ukgarage, phonk, amapiano, hyperpop)
-- **chill** 🌆 Chill/Downtempo (8) — lofi, chillhop, downtempo, triphop, balearic, ambient, vaporwave, futuregarage
-- **jazz** 🎷 Jazz/Soul/Funk (11) — smoothjazz, bebop, cooljazz, fusion, jazz, bossa, latinjazz, neosoul, funksoul, motown, disco
-- **hiphop** 🎤 Hip-hop/R&B (8) — boombap, trap, drill, cloudrap, oldschool, westcoast, rnb, jerseyclub
-- **rockpop** 🎸 Rock/Pop (15) — indierock, punkrock, grunge, metal, blues, reggae, ska, dub, synthwave, citypop, synthpop, kpop, jpop, disco_pop, shoegaze
-- **classical** 🎻 Classical/Cinematic (5) — neoclassic, baroque, cinematic, strings, horror
-- **world** 🌏 World/Experimental (11) — gugak, gamelan, raga, afrobeat, flamenco, celtic, reggaeton, bhangra, glitch, noise, generative
+| 키 | 이름 | BPM | 특성 |
+|---|---|---|---|
+| `ibiza` | 🏝️ 이비자 하우스 | 128 | 4-on-floor · 펌핑 베이스 |
+| `futurehouse` | 🚀 퓨처 하우스 | 128 | 덕킹 베이스 · 필터 스윕 훅 |
+| `techno` | 🏭 테크노 | 132 | 인더스트리얼 · 애시드 303 |
+| `uplifting` | 🌟 업리프팅 트랜스 | 138 | 슈퍼소우 · 감정 빌드업 |
+| `psytrance` | 🌀 사이키트랜스 | 145 | 16분 베이스 · 트위스티 리드 |
+| `hardstyle` | 🏛️ 하드스타일 | 150 | 디스토션 킥 · 리버스 베이스 |
+| `dnb` | ⚡ 드럼앤베이스 | 174 | 빠른 브레이크 · 리스 베이스 |
+| `jungle` | 🌴 정글 | 170 | 아멘 브레이크 · 서브베이스 |
+| `trap` | 🔥 트랩 | 140 | 808 · 하이햇 롤 |
+| `kpop` | 🎶 K-pop | 128 | 4-on-floor + EDM 드롭 |
 
-### 변주(variants) 시스템
+### 8-bar phrase 구조 (15초 완성형)
 
-`TEMPLATES[key].variants`는 선택 필드로, 대체 레이어 배열들의 배열. `🎲 변주` 버튼 클릭 시 시드로 `[기본, ...variants]` 중 하나를 먼저 선택하고 이어서 기존 멜로디 레이어 셔플을 적용한다. 현재 variants 보유: ibiza(2), lofi(2), trap(1), trance(1), synthwave(1).
+각 프리셋은 `.mask("<1 1 1 1 1 1 1 0>")` 형태 8자리 바이너리로 레이어별 등장·퇴장 타이밍을 제어한다:
+
+- **bars 1-2 (Intro):** 킥 + 서브 패드만
+- **bars 3-4 (Build):** 클랩·하이햇 레이어 가세, bar 4에 스네어 롤 필(`sd*16`, `saw.range()` gain 램프)
+- **bars 5-7 (Drop):** 크래시 시작, 베이스·리드·코드 풀 스택
+- **bar 8 (Outro):** 킥 드롭 → 리드/패드만 잔향으로 숨쉬기
+
+8 cycles ≈ 11~15초 (128 BPM=15s, 174 BPM=11s).
 
 ## 동작 방식
 
@@ -62,4 +74,7 @@ netlify dev   # http://localhost:8888
 
 ## 템플릿 추가 방법
 
-`app.js`의 `TEMPLATES` 객체에 새 키-값 추가, `KEYWORDS`에 매칭어 추가, `index.html`의 `.preset-buttons`에 버튼 추가.
+`templates.js`의 `TEMPLATES` 객체에 새 키-값 추가 시:
+1. 8-bar phrase 구조 유지 — 각 레이어에 `.mask("<...>")` 패턴으로 진행감 부여
+2. 드럼은 `/sound\("(bd|sd|hh|cp|cr|rim|cb|oh)/` 정규식에 매칭되도록 (변주 시드 드럼/멜로디 분리용)
+3. `CATEGORIES.djtop10.styles`에 키 추가
