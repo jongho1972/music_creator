@@ -11,7 +11,7 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://strudel-creator.netlify.app">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%BC%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="styles.css?v=20260417">
+<link rel="stylesheet" href="styles.css?v=20260417b">
 </head>
 <body>
 <header>
@@ -72,32 +72,32 @@
         <input type="range" id="volumeSlider" min="0" max="1.2" step="0.05" value="0.8">
         <span class="dj-val" id="volumeValue">80%</span>
       </label>
-      <label class="dj-slider">
+      <label class="dj-slider" data-tip="고음 컷 · 먹먹하게 · 드롭 직전 긴장감 빌드업">
         <span class="dj-label">🔽 LPF</span>
         <input type="range" id="lpfSlider" min="200" max="20000" step="100" value="20000">
         <span class="dj-val" id="lpfSliderVal">OFF</span>
       </label>
-      <label class="dj-slider">
+      <label class="dj-slider" data-tip="저음 컷 · 얇아지게 · 브레이크다운 분위기">
         <span class="dj-label">🔼 HPF</span>
         <input type="range" id="hpfSlider" min="0" max="2000" step="20" value="0">
         <span class="dj-val" id="hpfSliderVal">OFF</span>
       </label>
-      <label class="dj-slider">
+      <label class="dj-slider" data-tip="공간감 · 잔향 · 몽환적인 홀 느낌">
         <span class="dj-label">💫 리버브</span>
         <input type="range" id="reverbSlider" min="0" max="1" step="0.05" value="0">
         <span class="dj-val" id="reverbSliderVal">0%</span>
       </label>
-      <label class="dj-slider">
+      <label class="dj-slider" data-tip="에코 반복 · 빈 공간에 여운을 남김">
         <span class="dj-label">🔁 딜레이</span>
         <input type="range" id="delaySlider" min="0" max="0.7" step="0.05" value="0">
         <span class="dj-val" id="delaySliderVal">0%</span>
       </label>
-      <label class="dj-slider">
+      <label class="dj-slider" data-tip="박자 어긋나게 밀기 · 재즈 · 훵키 그루브">
         <span class="dj-label">🎷 스윙</span>
         <input type="range" id="swingSlider" min="0" max="0.3" step="0.01" value="0">
         <span class="dj-val" id="swingSliderVal">0%</span>
       </label>
-      <label class="dj-slider">
+      <label class="dj-slider" data-tip="디스토션 · 거칠고 공격적인 왜곡 텍스처">
         <span class="dj-label">🔥 크러시</span>
         <input type="range" id="shapeSlider" min="0" max="0.7" step="0.05" value="0">
         <span class="dj-val" id="shapeSliderVal">0%</span>
@@ -109,7 +109,7 @@
       </label>
     </div>
     <div class="dj-toggles">
-      <button id="sidechainBtn" class="dj-toggle">💓 사이드체인</button>
+      <button id="sidechainBtn" class="dj-toggle" data-tip="킥에 맞춰 멜로디 볼륨 펌핑 · 하우스/EDM 숨쉬는 느낌">💓 사이드체인</button>
       <button id="drumMuteBtn" class="dj-toggle">🥁 드럼 뮤트</button>
       <button id="melMuteBtn" class="dj-toggle">🎹 멜로디 뮤트</button>
       <button id="fxResetBtn" class="dj-reset">🔄 리셋</button>
