@@ -30,15 +30,6 @@
     <span id="status" class="status">로딩 중...</span>
   </section>
 
-  <section class="ai-gen">
-    <div class="ai-header">🤖 AI 생성 <span class="ai-hint">자연어로 장르·분위기·BPM·악기를 묘사하면 Strudel 코드를 만들어 줍니다</span></div>
-    <div class="ai-row">
-      <input id="aiPrompt" class="ai-input" type="text" maxlength="500" placeholder="예) 어두운 드럼앤베이스 150 BPM, 리스베이스와 울리는 패드" />
-      <button id="aiGenBtn" class="ai-gen-btn">✨ 생성</button>
-    </div>
-    <div id="aiStatus" class="ai-status"></div>
-  </section>
-
   <section class="ai-gen preset-gen">
     <div class="ai-header">📂 프리셋 <span class="ai-hint">DJ 관점 10선 · 각 프리셋이 15초 내 intro→build→drop→outro로 전개됩니다</span></div>
     <div class="genre-row">
@@ -46,6 +37,15 @@
       <select id="genreSelect" class="genre-select"></select>
       <button id="randomGenreBtn" class="genre-random">🎲 다른 장르</button>
     </div>
+  </section>
+
+  <section class="ai-gen">
+    <div class="ai-header">🤖 AI 생성 <span class="ai-hint">자연어로 장르·분위기·BPM·악기를 묘사하면 Strudel 코드를 만들어 줍니다</span></div>
+    <div class="ai-row">
+      <input id="aiPrompt" class="ai-input" type="text" maxlength="500" placeholder="예) 어두운 드럼앤베이스 150 BPM, 리스베이스와 울리는 패드" />
+      <button id="aiGenBtn" class="ai-gen-btn">✨ 생성</button>
+    </div>
+    <div id="aiStatus" class="ai-status"></div>
   </section>
 
   <section class="dj-console">
