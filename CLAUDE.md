@@ -1,4 +1,4 @@
-# music_creator
+# Music_Creator
 
 DJ 관점에서 선별한 10개 장르 프리셋을 Strudel 라이브 코딩으로 15초 완성형 재생하는 정적 웹페이지.
 
@@ -55,13 +55,13 @@ DJ 관점에서 선별한 10개 장르 프리셋을 Strudel 라이브 코딩으�
 
 정적 페이지만 확인 (AI 생성 제외):
 ```bash
-cd music_creator
+cd Music_Creator
 python3 -m http.server 8000
 ```
 
 AI 생성까지 테스트하려면 Netlify CLI 사용:
 ```bash
-cd music_creator
+cd Music_Creator
 export ANTHROPIC_API_KEY=sk-ant-...
 netlify dev   # http://localhost:8888
 ```
